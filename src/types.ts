@@ -1,0 +1,71 @@
+import { OpenapiDocument } from "edge-util";
+
+// see: https://vercel.com/docs/functions/edge-middleware/limitations#limits-on-fetch-api
+export const MAX_CONCURRENCY = 6;
+export const MAX_FETCH_INVOCATIONS = 950;
+
+type XLinks = { apiManagementUrl?: string };
+
+export type Provider = {
+  /** Overwritten, improved, title and description */
+  info?: {
+    title?: string;
+    description?: string;
+    ["x-links"]?: any;
+    ["x-logo"]?: { backgroundColor?: string; url: string };
+  };
+  providerSlug: string;
+  openapi?: OpenapiDocument;
+  added?: string;
+  updated?: string;
+  originalOpenapiUrl?: string;
+  openapiUrl: string;
+  categories?: string[];
+  links?: XLinks;
+  openapiVer: string;
+  category: "register" | "primary" | "apisguru" | "secondary" | "internal";
+  /** If required, the security scheme(s) with access token(s) can be provided here, to allow the OpenAPI to be tested */
+  securitySchemes?: { key: string; access_token: string }[];
+};
+
+export interface ApisGuruList {
+  [providerSlug: string]: {
+    /** Date string */
+    added: string;
+    /** Preferred version */
+    preferred: string;
+
+    versions: {
+      [version: string]: {
+        added: string;
+        info: {
+          contact?: {
+            email?: string;
+            name?: string;
+            url?: string;
+          };
+          description: string;
+          title: string;
+          version: string;
+          "x-apisguru-categories": string[];
+          "x-logo": {
+            backgroundColor?: string;
+            url: string;
+          };
+          "x-origin": Array<{
+            format: string;
+            url: string;
+            version: string;
+          }>;
+          "x-providerName": string;
+          "x-serviceName"?: string;
+        };
+        updated: string;
+        swaggerUrl: string;
+        swaggerYamlUrl: string;
+        openapiVer: string;
+        link: string;
+      };
+    };
+  };
+}

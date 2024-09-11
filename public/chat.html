@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmer Chatbot</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        #userInput {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        #submitBtn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        #response {
+            background-color: white;
+            padding: 20px;
+            width: 100%;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+
+        #settingsBtn,
+        #shareBtn {
+            background-color: #008CBA;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-left: 10px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <script>
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement(
+                { pageLanguage: 'en' },
+                'google_translate_element'
+            );
+        }
+    </script>
+    <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+    <div class="container">
+        <header>
+            <h1>Green Roots Chat</h1>
+        </header>
+
+        <div>
+            <input type="text" id="userInput" placeholder="Ask your question about growing food locally here...">
+        </div>
+
+        <div>
+            <button id="submitBtn">
+                <i id="submitIcon" class="fas fa-paper-plane"></i> Submit
+            </button>
+            <button id="settingsBtn">
+                <i class="fas fa-cog"></i> Settings
+            </button>
+            <button id="shareBtn">
+                <i class="fas fa-share"></i> Share
+            </button>
+        </div>
+
+        <div id="response"></div>
+    </div>
+
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Settings</h2>
+            <label for="country">Country:</label>
+            <input type="text" id="country" placeholder="Enter your country">
+            <label for="region">Region:</label>
+            <input type="text" id="region" placeholder="Enter your region">
+            <label for="city">City:</label>
+            <input type="text" id="city" placeholder="Enter your city">
+            <button id="saveSettings">Save</button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.1/showdown.min.js"></script>
+    <script>
+        let data = {}
+
+        if (localStorage.getItem('farmerChatbotSettings')) {
+            data = JSON.parse(localStorage.getItem('farmerChatbotSettings'));
+        }
+
+        let isLoading = false;
+        const converter = new showdown.Converter();
+        const messages = [];
+
+        function loadSettings() {
+            document.getElementById('country').value = data.country || '';
+            document.getElementById('region').value = data.region || '';
+            document.getElementById('city').value = data.city || '';
+        }
+
+        function saveSettings() {
+            data.country = document.getElementById('country').value;
+            data.region = document.getElementById('region').value;
+            data.city = document.getElementById('city').value;
+            localStorage.setItem('farmerChatbotSettings', JSON.stringify(data));
+        }
+
+        async function streamResponse(userPrompt) {
+            isLoading = true;
+            document.getElementById('submitIcon').className = "fas fa-circle-notch fa-spin";
+
+            const response = document.getElementById('response');
+            let currentResponse = '';
+
+            try {
+                messages.push({ role: 'user', content: userPrompt });
+                const res = await fetch('https://chat.actionschema.com/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        messages: [
+                            {
+                                role: 'system', content: `You are a chatbot for Green Roots.
+                            
+                            
+You aim to provide user with the tools and knowledge to cultivate their own food, offering support by connecting them to local resources and communities. to shift the focus from commercial dependency to self-sustainability.
+
+The user is probably in ${data.country}, ${data.region}, ${data.city}. Please convirm this with them.
+
+First ask the user about heir living situation, then be helpful by giving ideas that can be applied immediately.
+
+The current date: ${new Date(Date.now()).toDateString()}.`
+                            },
+                            ...messages
+                        ],
+                        model: "gpt-4o-mini",
+                        stream: true
+                    })
+                });
+
+                const reader = res.body.getReader();
+                const decoder = new TextDecoder();
+
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+
+                    const chunk = decoder.decode(value);
+                    const lines = chunk.split('\n');
+
+                    for (const line of lines) {
+                        if (line.startsWith('data:')) {
+                            try {
+                                const data = JSON.parse(line.slice(5));
+                                if (data.choices?.[0]?.delta?.content) {
+                                    currentResponse += data.choices[0].delta.content;
+                                    response.innerHTML = converter.makeHtml(currentResponse);
+                                    response.scrollTop = response.scrollHeight;
+                                }
+                            } catch (e) {
+                                console.log('Error parsing JSON:', e);
+                            }
+                        }
+                    }
+                }
+
+                messages.push({ role: 'assistant', content: currentResponse });
+                document.getElementById('submitIcon').className = "fas fa-paper-plane";
+                isLoading = false;
+
+            } catch (error) {
+                document.getElementById('submitIcon').className = "fas fa-paper-plane";
+                isLoading = false;
+                console.error('Error:', error);
+                response.innerHTML = `<p>Error: ${error.message}</p>`;
+            }
+        }
+
+        document.getElementById('submitBtn').addEventListener('click', () => {
+            if (!isLoading) {
+                const userPrompt = document.getElementById('userInput').value;
+                streamResponse(userPrompt);
+                document.getElementById('userInput').value = '';
+            }
+        });
+
+        document.getElementById('userInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !isLoading) {
+                const userPrompt = document.getElementById('userInput').value;
+                streamResponse(userPrompt);
+                document.getElementById('userInput').value = '';
+            }
+        });
+
+        document.getElementById('settingsBtn').addEventListener('click', () => {
+            document.getElementById('settingsModal').style.display = 'block';
+            loadSettings();
+        });
+
+        document.querySelector('.close').addEventListener('click', () => {
+            document.getElementById('settingsModal').style.display = 'none';
+        });
+
+        document.getElementById('saveSettings').addEventListener('click', () => {
+            saveSettings();
+            document.getElementById('settingsModal').style.display = 'none';
+        });
+
+        document.getElementById('shareBtn').addEventListener('click', () => {
+            const text = encodeURIComponent("Check out this awesome Farmer Chatbot!");
+            const url = encodeURIComponent(window.location.href);
+            window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank');
+        });
+
+        window.onclick = (event) => {
+            if (event.target == document.getElementById('settingsModal')) {
+                document.getElementById('settingsModal').style.display = 'none';
+            }
+        };
+
+        loadSettings();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,48 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "rewrites": [
+    {
+      "source": "/:path*",
+      "destination": "/api/:path*"
+    }
+  ],
+
+  "redirects": [{ "source": "/", "destination": "/index.html" }],
+
+  "crons": [
+    {
+      "path": "/api/storeProviders",
+      "schedule": "0 0 * * *"
+    }
+  ],
+
+  "headers": [
+    {
+      "source": "/:path*",
+      "headers": [
+        { "key": "Access-Control-Allow-Credentials", "value": "true" },
+
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Access-Control-Allow-Methods",
+          "value": "GET, POST, PUT, PATCH, DELETE"
+        },
+        {
+          "key": "Access-Control-Allow-Headers",
+          "value": "Accept, Content-Type, Authorization"
+        }
+      ]
+    }
+  ],
+  "functions": {
+    "api/**/*.*": {
+      "maxDuration": 60,
+      "memory": 1024
+    }
+  },
+
+  "public": false
+}

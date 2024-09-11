@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenAPI Search - Find and Chat with OpenAPIs</title>
+    <meta name="description" content="Search and explore OpenAPI specifications. Powered by OpenAPI Initiative.">
+    <meta property="og:title" content="OpenAPI Search - Find and Chat with OpenAPIs">
+    <meta property="og:description" content="Search and explore OpenAPI specifications. Powered by OpenAPI Initiative.">
+    <meta property="og:image" content="https://openapisearch.com/og-image.png">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://openapisearch.com">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-M05S6XVCGF"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag("js", new Date());
+        gtag("config", "G-M05S6XVCGF");
+    </script>
+</head>
+
+<body class="bg-gray-100 min-h-screen flex flex-col">
+    <header class="bg-white shadow-md p-4">
+        <div class="container mx-auto flex flex-col items-center">
+            <h1 class="text-3xl font-bold mb-4">
+                <a href="/index.html" class="text-blue-600 hover:text-blue-800">OpenAPI Search</a>
+            </h1>
+            <div class="flex items-center mb-4">
+                <span class="mr-2">powered by</span>
+                <a href="https://openapis.org" target="_blank" rel="noopener noreferrer">
+                    <img src="openapi.png" alt="OpenAPI Initiative" class="h-6">
+                </a>
+            </div>
+            <form id="searchForm" class="w-full max-w-3xl">
+                <div class="flex flex-wrap -mx-2 mb-4">
+                    <div class="w-full px-2 mb-4">
+                        <input type="text" id="searchInput" name="search" placeholder="Search OpenAPIs..."
+                            class="w-full p-2 border rounded">
+                    </div>
+                    <div class="w-full md:w-1/2 px-2 mb-4">
+                        <select id="topFilter" name="top" class="w-full p-2 border rounded">
+                            <option value="">All</option>
+                            <option value="new">New</option>
+                            <option value="updated">Updated</option>
+                        </select>
+                    </div>
+                    <div class="w-full md:w-1/2 px-2 mb-4">
+                        <select id="categoryFilter" name="category" class="w-full p-2 border rounded">
+                            <option value="">All Categories</option>
+                            <option value="apisguru">APIs.guru</option>
+                            <option value="primary">Primary</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex justify-center">
+                    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        Search
+                    </button>
+                </div>
+            </form>
+        </div>
+    </header>
+
+    <main class="container mx-auto flex-grow p-4">
+        <div id="loading" class="text-center hidden">
+            <i class="fas fa-spinner fa-spin fa-3x"></i>
+            <p>Loading...</p>
+        </div>
+        <div id="welcome" class="text-center">
+            <h2 class="text-2xl font-bold mb-4">Find and Chat with OpenAPIs</h2>
+            <p class="text-lg mb-4">Enter a search query to get started!</p>
+        </div>
+        <div id="results" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- Results will be populated here -->
+        </div>
+    </main>
+
+    <footer class="bg-gray-200 p-4 mt-8">
+        <div class="container mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div>
+                    <h3 class="font-bold mb-2">Popular</h3>
+                    <ul id="popularList" class="list-disc pl-5"></ul>
+                </div>
+                <div>
+                    <h3 class="font-bold mb-2">New</h3>
+                    <ul id="newList" class="list-disc pl-5"></ul>
+                </div>
+                <div>
+                    <h3 class="font-bold mb-2">Updated</h3>
+                    <ul id="updatedList" class="list-disc pl-5"></ul>
+                </div>
+                <div>
+                    <h3 class="font-bold mb-2">Categories</h3>
+                    <ul id="categoriesList" class="list-disc pl-5"></ul>
+                </div>
+            </div>
+            <div class="mt-4 flex flex-wrap items-center justify-center space-x-4">
+                <a href="https://github.com/CodeFromAnywhere/openapi-search" target="_blank" rel="noopener noreferrer"
+                    class="text-gray-600 hover:text-gray-800">
+                    <i class="fab fa-github"></i> GitHub
+                </a>
+                <a href="https://openapis.org" target="_blank" rel="noopener noreferrer"
+                    class="flex items-center text-gray-600 hover:text-gray-800">
+                    <img src="openapi.png" alt="OpenAPI Initiative" class="h-4 mr-1">
+                    OpenAPI Initiative
+                </a>
+                <span class="text-sm text-gray-600">
+                    Made with ❤️ by
+                    <a href="https://x.com/wkarsens" target="_blank" rel="noopener noreferrer"
+                        class="text-blue-600 hover:text-blue-800">
+                        @wkarsens <i class="fab fa-twitter text-xs"></i>
+                    </a>
+                </span>
+                <span class="text-sm text-gray-600">
+                    Inspired by
+                    <a href="https://apis.guru" target="_blank" rel="noopener noreferrer" class="flex items-center">
+                        <img src="apis-guru.svg" alt="APIs Guru" class="h-4 mr-1"> APIs Guru
+                    </a>
+                </span>
+                <a href="https://apis.guru/awesome-openapi3/" target="_blank" rel="noopener noreferrer"
+                    class="text-blue-600 hover:text-blue-800">
+                    Browse OpenAPI Tools
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Function to show loading indicator
+        const showLoading = () => {
+            document.getElementById('loading').classList.remove('hidden');
+        };
+
+        // Function to hide loading indicator
+        const hideLoading = () => {
+            document.getElementById('loading').classList.add('hidden');
+        };
+
+        // Function to get URL parameters
+        const getUrlParams = () => {
+            return new URLSearchParams(window.location.search);
+        };
+
+        // Function to perform search
+        const performSearch = async () => {
+            const params = getUrlParams();
+            const query = params.get('q');
+            const category = params.get('category');
+            const categories = params.get('categories');
+
+            if (!query) {
+                document.getElementById('welcome').style.display = 'block';
+                document.getElementById('results').style.display = 'none';
+                return;
+            }
+
+            document.getElementById('welcome').style.display = 'none';
+            document.getElementById('results').style.display = 'grid';
+
+            showLoading();
+
+            try {
+                const response = await axios.get('/search', { params: { q: query, category, categories } });
+                displayResults(response.data.results);
+            } catch (error) {
+                console.error('Error fetching search results:', error);
+            } finally {
+                hideLoading();
+            }
+        };
+
+        // Function to fetch and display lists
+        const fetchAndDisplayList = async (endpoint, params, listId) => {
+            try {
+                showLoading();
+                const response = await axios.get(`${endpoint}`, { params });
+                const data = response.data;
+                const list = document.getElementById(listId);
+                list.innerHTML = '';
+                Object.entries(data).slice(0, 20).forEach(([key, value]) => {
+                    const li = document.createElement('li');
+                    const a = document.createElement('a');
+                    a.href = `/${key}`;
+                    a.textContent = key;
+                    a.className = 'text-blue-600 hover:text-blue-800 line-clamp-1 text-ellipsis';
+                    li.appendChild(a);
+                    list.appendChild(li);
+                });
+            } catch (error) {
+                console.error(`Error fetching ${listId}:`, error);
+            } finally {
+                hideLoading();
+            }
+        };
+
+        // Fetch and display lists
+        fetchAndDisplayList('/metadata', { popular: '1' }, 'popularList');
+        fetchAndDisplayList('/metadata', { top: 'new' }, 'newList');
+        fetchAndDisplayList('/metadata', { top: 'updated' }, 'updatedList');
+
+        // Fetch and display categories
+        const fetchAndDisplayCategories = async () => {
+            try {
+                showLoading();
+                const response = await axios.get('/categories');
+                const categories = response.data;
+                const list = document.getElementById('categoriesList');
+                list.innerHTML = '';
+                Object.keys(categories).forEach(category => {
+                    const li = document.createElement('li');
+                    const a = document.createElement('a');
+                    a.href = `?categories=${encodeURIComponent(category)}`;
+                    a.textContent = category;
+                    a.className = 'text-blue-600 hover:text-blue-800';
+                    li.appendChild(a);
+                    list.appendChild(li);
+                });
+            } catch (error) {
+                console.error('Error fetching categories:', error);
+            } finally {
+                hideLoading();
+            }
+        };
+
+        fetchAndDisplayCategories();
+
+        // Function to display search results
+        const displayResults = (results) => {
+            const resultsContainer = document.getElementById('results');
+            resultsContainer.innerHTML = '';
+
+            results.forEach(result => {
+                const card = document.createElement('div');
+                card.className = 'bg-white p-4 rounded shadow';
+
+                const metadata = result.metadata;
+                const title = metadata.info.title || metadata.providerSlug;
+                const description = metadata.info.description || 'No description available';
+                const logoUrl = metadata.info['x-logo'] ? metadata.info['x-logo'].url : '';
+
+                let titleHtml = title;
+                const query = getUrlParams().get('q');
+                if (query && metadata.providerSlug.includes(query)) {
+                    titleHtml = metadata.providerSlug.replace(new RegExp(query, 'gi'), (match) => `<span class="text-blue-600">${match}</span>`);
+                }
+
+                card.innerHTML = `
+                    ${logoUrl ? `<img src="${logoUrl}" alt="${title} logo" class="h-12 mb-2">` : ''}
+                    <h3 class="font-bold text-lg mb-2">
+                        <a href="/${metadata.providerSlug}" class="text-blue-600 hover:text-blue-800">${titleHtml}</a>
+                    </h3>
+                    <p class="text-sm mb-2">${description}</p>
+                    <div class="mb-2">
+                        ${metadata.category ? `<span class="bg-gray-200 px-2 py-1 rounded text-sm mr-2">${metadata.category}</span>` : ''}
+                        ${metadata.categories ? metadata.categories.map(cat => `<a href="?categories=${encodeURIComponent(cat)}" class="bg-gray-200 px-2 py-1 rounded text-sm mr-2 hover:bg-gray-300">${cat}</a>`).join('') : ''}
+                    </div>
+                    <button onclick="findSimilar('${encodeURIComponent(JSON.stringify(metadata))}')" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded text-sm">Find Similar</button>
+                `;
+
+                resultsContainer.appendChild(card);
+            });
+        };
+
+        // Function to find similar items
+        const findSimilar = (data) => {
+            const decodedData = JSON.parse(decodeURIComponent(data));
+            const searchQuery = `${decodedData.info.title} ${decodedData.info.description}`.substring(0, 100);
+            window.location.href = `?q=${encodeURIComponent(searchQuery)}`;
+        };
+
+        // Attach search function to form submit
+        document.getElementById('searchForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const searchInput = document.getElementById('searchInput').value;
+            const topFilter = document.getElementById('topFilter').value;
+            const categoryFilter = document.getElementById('categoryFilter').value;
+            window.location.href = `?q=${encodeURIComponent(searchInput)}&top=${topFilter}&category=${categoryFilter}`;
+        });
+
+        // Perform search on page load
+        window.addEventListener('load', performSearch);
+    </script>
+</body>
+
+</html>

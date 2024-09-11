@@ -1,0 +1,514 @@
+{
+  "$schema": "https://ref.actionschema.com/openapi.json",
+  "x-actionschema": "0.0.1",
+  "openapi": "3.1.0",
+  "info": {
+    "title": "OpenAPI Search API",
+    "version": "1.0.0",
+    "description": "API for searching and retrieving OpenAPI specifications"
+  },
+  "servers": [{ "url": "https://openapisearch.com" }],
+  "paths": {
+    "/suggest": {
+      "get": {
+        "operationId": "suggest",
+        "summary": "Get search suggestions",
+        "description": "Returns search suggestions based on the provided query or top queries if no query is provided",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "description": "Search query prefix",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "maxItems": 9
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/search": {
+      "get": {
+        "operationId": "search",
+        "summary": "Search for items",
+        "description": "Search for openapis based on query and optional filters",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Search query"
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": ["primary", "apiguru"]
+            },
+            "description": "Filter by indexation category"
+          },
+          {
+            "name": "exact",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": ["0", "1"]
+            },
+            "description": "Use exact matching to ID (1) or not (0)"
+          },
+          {
+            "name": "categories",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by category"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "duration": {
+                      "type": "number",
+                      "description": "Duration of the search in milliseconds"
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "score": {
+                            "type": "number"
+                          },
+                          "data": {
+                            "type": "string"
+                          },
+                          "metadata": {
+                            "$ref": "#/components/schemas/Provider"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable entity",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/categories": {
+      "get": {
+        "summary": "Get sorted category counts",
+        "description": "Retrieves metadata, counts categories, and returns sorted results.",
+        "operationId": "categories",
+        "responses": {
+          "200": {
+            "description": "Successful response with sorted category counts",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "integer"
+                  },
+                  "description": "An object where keys are categories and values are their occurrence counts, sorted in descending order."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/{providerSlug}/openapi.json": {
+      "get": {
+        "operationId": "openapi.json",
+        "summary": "Get OpenAPI specification in JSON format",
+        "parameters": [
+          {
+            "name": "providerSlug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The slug of the API provider"
+          },
+          {
+            "name": "operationIds",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Comma-separated list of operation IDs to filter the OpenAPI spec"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      }
+    },
+    "/{providerSlug}/openapi.yaml": {
+      "get": {
+        "operationId": "openapi.yaml",
+        "summary": "Get OpenAPI specification in YAML format",
+        "parameters": [
+          {
+            "name": "providerSlug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The slug of the API provider"
+          },
+          {
+            "name": "operationIds",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Comma-separated list of operation IDs to filter the OpenAPI spec"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "text/yaml": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      }
+    },
+    "/{providerSlug}/metadata.json": {
+      "get": {
+        "operationId": "metadata.json",
+        "summary": "Get metadata in JSON format",
+        "parameters": [
+          {
+            "name": "providerSlug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The slug of the API provider"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Provider"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      }
+    },
+    "/{providerSlug}/metadata.yaml": {
+      "get": {
+        "operationId": "metadata.yaml",
+        "summary": "Get metadata in YAML format",
+        "parameters": [
+          {
+            "name": "providerSlug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The slug of the API provider"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "text/yaml": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      }
+    },
+
+    "/metadata": {
+      "get": {
+        "operationId": "metadata",
+        "summary": "Get metadata of (a subset of) OpenAPIs",
+        "description": "Retrieve metadata based on specified parameters",
+        "parameters": [
+          {
+            "name": "top",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": ["new", "updated"]
+            },
+            "description": "Filter for top new or updated items"
+          },
+          {
+            "name": "categories",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "description": "List of categories to filter by",
+            "style": "form",
+            "explode": true
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": ["apisguru", "primary"]
+            },
+            "description": "Single category to filter by"
+          },
+          {
+            "name": "popular",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": ["1"]
+            },
+            "description": "Set to '1' to retrieve popular items"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "$ref": "#/components/schemas/Provider"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/registry": {
+      "get": {
+        "operationId": "registry",
+
+        "summary": "Get registry of OpenAPI URLs",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/set": {
+      "post": {
+        "operationId": "set",
+
+        "summary": "Register new OpenAPI specification",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Provider"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "422": {
+            "description": "Unprocessable entity"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Provider": {
+        "type": "object",
+        "properties": {
+          "info": {
+            "type": "object",
+            "properties": {
+              "title": { "type": "string" },
+              "description": { "type": "string" },
+              "x-links": { "type": "object" },
+              "x-logo": {
+                "type": "object",
+                "properties": {
+                  "backgroundColor": { "type": "string" },
+                  "url": { "type": "string" }
+                },
+                "required": ["url"]
+              }
+            }
+          },
+          "providerSlug": { "type": "string" },
+          "openapi": { "type": "object" },
+          "added": { "type": "string" },
+          "updated": { "type": "string" },
+          "originalOpenapiUrl": { "type": "string" },
+          "openapiUrl": { "type": "string" },
+          "categories": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "links": { "type": "object" },
+          "openapiVer": { "type": "string" },
+          "category": {
+            "type": "string",
+            "enum": ["register", "primary", "apisguru", "secondary", "internal"]
+          }
+        },
+        "required": ["providerSlug", "openapiUrl", "openapiVer", "category"]
+      }
+    }
+  }
+}
