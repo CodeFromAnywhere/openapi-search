@@ -8,6 +8,10 @@ Plan a full day on this!!!!
 - Find other key figures who would be excited by this and DM them
 - Brainstorm more with claude
 
+# Shuffle
+
+https://developer.mozilla.org/en-US/docs/Web/API/Accelerometer
+
 # Factor search
 
 - Weigh in the string-match to the final score, creating 'hybrid search'
