@@ -66,6 +66,16 @@ export const GET = async (request: Request) => {
     );
   }
 
+  if (extension === "html") {
+    const openapiHtml = await fetch(
+      "https://openapisearch.com/openapi.html",
+    ).then((res) => res.text());
+    return new Response(openapiHtml, {
+      status: 200,
+      headers: { "Content-Type": "text/html" },
+    });
+  }
+
   const openapiPromise = redis.get<OpenapiDocument>(
     `openapi-store.openapi.${providerSlug}`,
   );
