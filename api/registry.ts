@@ -31,7 +31,7 @@ export const GET = async () => {
   // }
 
   const list: string[] = ids.map(
-    (id) => `https://openapisearch.com/${id}/openapi.json`,
+    (id) => `https://openapisearch.com/api/${id}/openapi.json`,
   );
 
   return new Response(JSON.stringify(list), {

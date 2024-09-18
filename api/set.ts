@@ -78,7 +78,8 @@ export const POST = async (request: Request) => {
   }
 
   const openapiUrl =
-    json.openapiUrl || `https://openapisearch.com/openapi/${chosenSlug}.json`;
+    json.openapiUrl ||
+    `https://openapisearch.com/api/${chosenSlug}/openapi.json`;
 
   const proxyUrl = await storeOpenapi({
     openapiVer: openapiJson.openapi,

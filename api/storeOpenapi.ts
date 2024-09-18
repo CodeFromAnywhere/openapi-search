@@ -134,7 +134,7 @@ export const storeOpenapi = async (provider: Provider) => {
       })
     : undefined;
 
-  const proxyUrl = `https://openapisearch.com/openapi/${metadata.providerSlug}.json`;
+  const proxyUrl = `https://openapisearch.com/api/${metadata.providerSlug}/openapi.json`;
   const isNew = metadata.openapiUrl === proxyUrl;
 
   // to save storage, only store it if we can't just reuse the origin location.

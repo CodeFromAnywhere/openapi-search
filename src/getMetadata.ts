@@ -80,7 +80,7 @@ export const getMetadata = async (context: {
         [current.providerSlug]: {
           ...current,
           originalOpenapiUrl: current.openapiUrl,
-          openapiUrl: `https://openapisearch.com/${current.providerSlug}/openapi.json`,
+          openapiUrl: `https://openapisearch.com/api/${current.providerSlug}/openapi.json`,
         },
       };
     },
