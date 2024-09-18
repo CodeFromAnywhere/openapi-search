@@ -255,7 +255,7 @@
                 card.innerHTML = `
                     ${logoUrl ? `<img src="${logoUrl}" alt="${title} logo" class="h-12 mb-2">` : ''}
                     <h3 class="font-bold text-lg mb-2">
-                        <a href="/${metadata.providerSlug}" class="text-blue-600 hover:text-blue-800">${titleHtml}</a>
+                        <a href="/api/${metadata.providerSlug}" class="text-blue-600 hover:text-blue-800">${titleHtml}</a>
                     </h3>
                     <p class="text-sm mb-2">${description}</p>
                     <div class="mb-2">

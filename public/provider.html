@@ -76,7 +76,7 @@
             const descriptionElement = document.getElementById('providerDescription');
             const metadataElement = document.getElementById('providerMetadata');
 
-            titleElement.textContent = data.metadata.info?.title || 'Unknown Provider';
+            titleElement.textContent = data.metadata.providerName || data.metadata.providerSlug || 'Unknown Provider';
             descriptionElement.innerHTML = marked.parse(data.metadata.info?.description || 'No description available');
 
             let metadataHtml = `
