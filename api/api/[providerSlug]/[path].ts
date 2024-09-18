@@ -126,3 +126,14 @@ export const GET = async (request: Request) => {
     headers: { "Content-Type": "application/json" },
   });
 };
+
+export const OPTIONS = async () => {
+  // Set CORS headers
+  const headers = {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET, POST, PUT, PATCH, DELETE, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization",
+  };
+  // Handle OPTIONS request (preflight)
+  return new Response(null, { headers });
+};
