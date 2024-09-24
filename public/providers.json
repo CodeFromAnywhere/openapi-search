@@ -7,6 +7,11 @@
       "openapiUrl": "https://openapi.actionschema.com/jina-reader.json"
     },
 
+    "irfc-cloud": {
+      "openapiUrl": "https://irfc.cloud/openapi.json",
+      "info": { "description": "AI-Powered Cloud Hosting" }
+    },
+
     "upstash-redis": {
       "info": { "description": "Control a Redis database over API" },
       "openapiUrl": "https://openapi.actionschema.com/upstash-redis.json"
