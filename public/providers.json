@@ -2,6 +2,23 @@
   "$schema": "https://openapisearch.com/providers.schema.json",
 
   "providers": {
+    "jina-reader": {
+      "info": { "description": "Read webpages" },
+      "openapiUrl": "https://openapi.actionschema.com/jina-reader.json"
+    },
+
+    "upstash-redis": {
+      "info": { "description": "Control a Redis database over API" },
+      "openapiUrl": "https://openapi.actionschema.com/upstash-redis.json"
+    },
+    "upstash-qstash": {
+      "info": { "description": "Scheduling and batching API calls" },
+      "openapiUrl": "https://openapi.actionschema.com/upstash-qstash.json"
+    },
+    "upstash-vector": {
+      "info": { "description": "Control a Vector database over API" },
+      "openapiUrl": "https://vector.actionschema.com/openapi.json"
+    },
     "digitalocean": {
       "categories": ["dev-tools"],
       "hasOauth2": true,
@@ -134,6 +151,7 @@
     },
 
     "stripe": {
+      "hasOauth2": true,
       "categories": ["payment"],
       "info": {
         "description": "Create a paywall for your app or invoices",
@@ -147,7 +165,14 @@
       "auth_standard": "oauth2",
       "openapiUrl": "https://api.apis.guru/v2/specs/stripe.com/2022-11-15/openapi.json"
     },
-
+    "actionschema-chat": {
+      "auth_mode": "BEARER",
+      "auth_standard": "oauth2",
+      "openapiUrl": "https://chat.actionschema.com/openapi.json",
+      "info": {
+        "description": "Chat completions with tools for multiple providers"
+      }
+    },
     "actionschema-search": {
       "auth_mode": "BEARER",
       "auth_standard": "oauth2",
@@ -530,10 +555,6 @@
       }
     },
 
-    "sendgrid": {
-      "openapiUrl": "https://raw.githubusercontent.com/sendgrid/sendgrid-oai/main/oai.json"
-    },
-
     "whatsapp-business": {
       "openapiUrl": "https://api.apis.guru/v2/specs/whatsapp.local/1.0/openapi.json",
       "info": {
@@ -543,9 +564,19 @@
 
     "shopify": {
       "info": { "description": "Shopify Admin API" },
-      "openapiUrl": "https://raw.githubusercontent.com/allengrant/shopify_openapi/master/shopify_openapi.json"
+      "openapiUrl": "https://raw.githubusercontent.com/allengrant/shopify_openapi/master/shopify_openapi.json",
+      "categories": ["e-commerce"],
+      "hasOauth2": true,
+      "authorization_url": "https://${connectionConfig.subdomain}.myshopify.com/admin/oauth/authorize",
+      "token_url": "https://${connectionConfig.subdomain}.myshopify.com/admin/oauth/access_token",
+      "proxy": {
+        "base_url": "https://${connectionConfig.subdomain}.myshopify.com",
+        "headers": {
+          "X-Shopify-Access-Token": "${accessToken}"
+        }
+      },
+      "docs": "https://docs.nango.dev/integrations/all/shopify"
     },
-
     "twilio-messaging": {
       "openapiUrl": "https://raw.githubusercontent.com/twilio/twilio-oai/main/spec/json/twilio_messaging_v1.json",
       "auth_mode": "BASIC"
@@ -634,10 +665,7 @@
       "openapiUrl": "https://api.apis.guru/v2/specs/googleapis.com/sheets/v4/openapi.json",
       "description": "Reads and writes Google Sheets."
     },
-    "google-docs": {
-      "openapiUrl": "https://api.apis.guru/v2/specs/googleapis.com/docs/v1/openapi.json",
-      "description": "Reads and writes Google Docs documents"
-    },
+
     "google-drive": {
       "openapiUrl": "https://api.apis.guru/v2/specs/googleapis.com/drive/v3/openapi.json",
       "description": "Manages files in Drive including uploading, downloading, searching, detecting changes, and updating "
@@ -646,10 +674,7 @@
       "description": "Stores sensitive data such as API keys, passwords, and certificates. Provides convenience while improving security.",
       "openapiUrl": "https://api.apis.guru/v2/specs/googleapis.com/secretmanager/v1beta1/openapi.json"
     },
-    "google-calendar": {
-      "description": "Manage your calendars in Google",
-      "openapiUrl": "https://api.apis.guru/v2/specs/googleapis.com/calendar/v3/openapi.json"
-    },
+
     "flyio": { "openapiUrl": "https://docs.machines.dev/spec/openapi3.json" },
 
     "vapi": { "openapiUrl": "https://api.vapi.ai/api-json" },
@@ -659,7 +684,9 @@
     "uberduck": { "openapiUrl": "https://api.uberduck.ai/openapi.json" },
 
     "twilio": {
-      "openapiUrl": "https://github.com/twilio/twilio-oai/tree/main/spec/json"
+      "openapiUrl": "https://github.com/twilio/twilio-oai/tree/main/spec/json",
+      "sourceUrl": "https://github.com/twilio/twilio-oai",
+      "docsUrl": "https://www.twilio.com/docs"
     },
 
     "saltedge": {
@@ -747,8 +774,28 @@
     },
 
     "hubspot": {
+      "categories": ["marketing", "support", "crm"],
+      "hasOauth2": true,
+      "authorization_url": "https://app.hubspot.com/oauth/authorize",
+      "token_url": "https://api.hubapi.com/oauth/v1/token",
+      "connection_configuration": ["portalId"],
+      "post_connection_script": "hubspot-post-connection",
+      "webhook_routing_script": "hubspot-webhook-routing",
+      "proxy": {
+        "base_url": "https://api.hubapi.com",
+        "decompress": true,
+        "paginate": {
+          "type": "cursor",
+          "cursor_path_in_response": "paging.next.after",
+          "limit_name_in_request": "limit",
+          "cursor_name_in_request": "after",
+          "response_path": "results"
+        }
+      },
+      "docs": "https://docs.nango.dev/integrations/all/hubspot",
       "$comment": "https://api.hubspot.com/api-catalog-public/v1/apis"
     },
+
     "hootsuite": {
       "$comment": "2.0 swagger",
       "openapiUrl": "https://platform.hootsuite.com/docs/api/swagger.yaml"
@@ -760,11 +807,6 @@
     "robocorp": {
       "description": "Robocorp controlroom",
       "openapiUrl": "https://robocorp.com/api/openapi.json"
-    },
-
-    "twilio": {
-      "sourceUrl": "https://github.com/twilio/twilio-oai",
-      "docsUrl": "https://www.twilio.com/docs"
     },
 
     "trello": {
@@ -787,27 +829,14 @@
     "sendgrid": {
       "categories": ["marketing"],
       "auth_mode": "API_KEY",
-      "proxy": {
-        "headers": {
-          "Authorization": "Bearer ${apiKey}"
-        },
-        "base_url": "https://api.sendgrid.com"
-      },
-      "docs": "https://docs.nango.dev/integrations/all/sendgrid"
+      "servers": [{ "url": "https://api.sendgrid.com" }],
+      "openapiUrl": "https://raw.githubusercontent.com/sendgrid/sendgrid-oai/main/oai.json"
     },
 
     "outlook": {
       "categories": ["communication"],
       "alias": "microsoft",
       "docs": "https://docs.nango.dev/integrations/all/outlook"
-    },
-
-    "stripe": {
-      "categories": ["payment"],
-      "hasOauth2": true,
-      "authorization_url": "https://connect.stripe.com/oauth/authorize",
-      "token_url": "https://connect.stripe.com/oauth/token",
-      "docs": "https://docs.nango.dev/integrations/all/stripe"
     },
 
     "spotify": {
@@ -1965,7 +1994,9 @@
           "response_path": "items"
         }
       },
-      "docs": "https://docs.nango.dev/integrations/all/google-calendar"
+      "docs": "https://docs.nango.dev/integrations/all/google-calendar",
+      "description": "Manage your calendars in Google",
+      "openapiUrl": "https://api.apis.guru/v2/specs/googleapis.com/calendar/v3/openapi.json"
     },
     "google-docs": {
       "categories": ["productivity"],
@@ -1973,8 +2004,11 @@
       "proxy": {
         "base_url": "https://docs.googleapis.com"
       },
-      "docs": "https://docs.nango.dev/integrations/all/google-docs"
+      "docs": "https://docs.nango.dev/integrations/all/google-docs",
+      "openapiUrl": "https://api.apis.guru/v2/specs/googleapis.com/docs/v1/openapi.json",
+      "description": "Reads and writes Google Docs documents"
     },
+
     "google-sheet": {
       "categories": ["productivity"],
       "alias": "google",
@@ -2210,27 +2244,7 @@
       },
       "docs": "https://docs.nango.dev/integrations/all/highlevel"
     },
-    "hubspot": {
-      "categories": ["marketing", "support", "crm"],
-      "hasOauth2": true,
-      "authorization_url": "https://app.hubspot.com/oauth/authorize",
-      "token_url": "https://api.hubapi.com/oauth/v1/token",
-      "connection_configuration": ["portalId"],
-      "post_connection_script": "hubspot-post-connection",
-      "webhook_routing_script": "hubspot-webhook-routing",
-      "proxy": {
-        "base_url": "https://api.hubapi.com",
-        "decompress": true,
-        "paginate": {
-          "type": "cursor",
-          "cursor_path_in_response": "paging.next.after",
-          "limit_name_in_request": "limit",
-          "cursor_name_in_request": "after",
-          "response_path": "results"
-        }
-      },
-      "docs": "https://docs.nango.dev/integrations/all/hubspot"
-    },
+
     "insightly": {
       "categories": ["crm"],
       "auth_mode": "BASIC",
@@ -3349,19 +3363,7 @@
       "alias": "microsoft",
       "docs": "https://docs.nango.dev/integrations/all/sharepoint-online"
     },
-    "shopify": {
-      "categories": ["e-commerce"],
-      "hasOauth2": true,
-      "authorization_url": "https://${connectionConfig.subdomain}.myshopify.com/admin/oauth/authorize",
-      "token_url": "https://${connectionConfig.subdomain}.myshopify.com/admin/oauth/access_token",
-      "proxy": {
-        "base_url": "https://${connectionConfig.subdomain}.myshopify.com",
-        "headers": {
-          "X-Shopify-Access-Token": "${accessToken}"
-        }
-      },
-      "docs": "https://docs.nango.dev/integrations/all/shopify"
-    },
+
     "shortcut": {
       "categories": ["dev-tools", "productivity"],
       "auth_mode": "API_KEY",
