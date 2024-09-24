@@ -16,14 +16,17 @@
       "info": { "description": "Control a Redis database over API" },
       "openapiUrl": "https://openapi.actionschema.com/upstash-redis.json"
     },
+
     "upstash-qstash": {
       "info": { "description": "Scheduling and batching API calls" },
       "openapiUrl": "https://openapi.actionschema.com/upstash-qstash.json"
     },
+
     "upstash-vector": {
       "info": { "description": "Control a Vector database over API" },
       "openapiUrl": "https://vector.actionschema.com/openapi.json"
     },
+
     "digitalocean": {
       "categories": ["dev-tools"],
       "hasOauth2": true,

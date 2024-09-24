@@ -3,7 +3,7 @@ import { getMetadata } from "../src/getMetadata.js";
 import { getAllProviders } from "../src/getAllProviders.js";
 
 //when this is newer last indexation, we will update it always
-const codeLastUpdated = 1725431214649;
+const codeLastUpdated = 1727175997479;
 export const GET = async (request: Request) => {
   const auth = request.headers.get("Authorization")?.slice("Bearer ".length);
   if (
@@ -46,7 +46,7 @@ export const GET = async (request: Request) => {
     return false;
   });
 
-  const dayCapProviders = updatedProviders.slice(0, 500);
+  const dayCapProviders = updatedProviders; //x.slice(0, 500);
 
   console.log(
     "providers",
