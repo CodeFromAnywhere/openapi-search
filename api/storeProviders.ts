@@ -68,6 +68,17 @@ export const GET = async (request: Request) => {
     0.01,
   );
 
+  if (result.error) {
+    return new Response(result.error, { status: 500 });
+  }
+
+  if (result.list?.find((x) => !!x.error)) {
+    console.log("FOUND ERRORS", {
+      error: result.error,
+      errors: result.list.filter((x) => !!x.error),
+    });
+  }
+
   return new Response(JSON.stringify(result), {
     status: 200,
     headers: { "Content-Type": "application/json" },
