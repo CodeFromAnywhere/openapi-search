@@ -35,3 +35,9 @@ https://upstash.com/pricing/qstash Free has:
 - max batch size: unknown, but max 1MB
 
 All we really need is a batch of messages to be sent out in a single fetchcall (fan out)
+
+# To reset...
+
+- Go to https://console.upstash.com to the redis CLI and run `FLUSHDB`
+- Go to vector db and remove all vectors in the namespace
+- run `src/reset.cli.ts`

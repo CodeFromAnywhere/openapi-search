@@ -21,7 +21,7 @@ Targeted improvements compared to https://apis.guru:
 Wishlist:
 
 - E2E Testing of OpenAPIs
-- OpenAPI Firehose
+- ~~OpenAPI Firehose~~
 - AI Crawler for OpenAPI Discovery
 - AI Crawler to augment OpenAPI Metadata
   - Adds authentication + scope info
@@ -32,11 +32,30 @@ Wishlist:
 ## Non-goals
 
 - Automatically customise theming. A little is ok, but don't go to far as there may be
-- Create a documatation reference website like [readme.com](https://readme.com) (there are many)
+- Create a docs reference website like [readme.com](https://readme.com) (there are many)
 - Add weird custom logic that is non-standard to the OpenAPI. Instead, I aim to create a layer on top of openapis to improve the implementation of the standard. I'll use [actionschema](https://actionschema.com) for this.
 
-# To reset...
+# TODO
 
-- Go to https://console.upstash.com/redis/f53b821b-184a-4081-ad47-5941b63d34e7?tab=cli and run `FLUSHDB`
-- Go to vector db and remove all vectors in the namespace
-- run `src/reset.cli.ts`
+Currently indexation has many errors and bad validation. **Improved api indexation and validation** is top priority
+
+- There's still a bug in providerslug being slugified containing things like ':'. this shouldn't be removed!
+- Add createdAt date to openapisearch storage
+- Ensure daily cron is cheap/efficient
+- ❌ openapisearch.com: Vector metadata doesn't fit for github.com and a dozen others. Let's debug the github.com one
+- Ensure if metadata doesn't fit, we skip it.
+- Remove all items that don't have metadata now to prevent downstream errors
+- ❌ openapisearch.com: `/api/trakt.tv/openapi.json` failed fetching openapi { status: 200, statusText: 'OK' } **Lot of openapis can't be found yet are still added into the search results. we need to add validation so we don't create downstream problems**
+
+I'm happy after all search results:
+
+- are openapis that exist
+- are in valid OpenAPI format
+
+Then...
+
+🤔 email apis.guru
+
+🤔 Shall I put actionschema.com live?
+
+🤔 See [backlog](BACKLOG.md). much more to do

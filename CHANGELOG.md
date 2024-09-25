@@ -105,3 +105,20 @@ From here on out continue with backend host so I can add "checkmark" functionali
 
 The art of finishing
 -->
+
+# Improved OpenAPI Indexations (september 26th, 2024)
+
+- ✅ Gather upstash openapis I already handmade before
+- ✅ Ensure id generated is like `hackernews/newstories.json__get hackernews/item/{id}.json__get` ('/' as split character and all characters allowed in operationId? Or can we transform it to be more compatible)
+- ✅ Confirm upstash is all included... also stripe, github, sendgrid
+- ✅ Add providerSlug to semantic-operation-search
+- ✅ Add providerSlug filter to semantic-operation-search
+- ✅ Create easy way to reset openapi-search and semantic-operation-search using npm script or so
+- ✅ Reset openapi-search and re-index all with minimal errors
+- ✅ Reset semantic-operation-search and re-index - all with minimal errors
+- ✅ Be aware of the errors that still occur and figure out ways to resolve those (see vercel logs + upstash logs)
+- ✅ Confirm that, now the operationId format is consistent everywhere and elegant.
+- ✅ Look at openapisearch and operationsearch and ensure the pipelines work and I have newest APIs
+- ✅ Generate html for `openapi-search-text` and put html into openapisearch.com (manually for now)
+
+🎉🎉🎉 At this point actionschema.com and openapisearch.com are "shareable". 🎉🎉🎉
