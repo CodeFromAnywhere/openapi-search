@@ -170,7 +170,7 @@
                         <div class="flex items-center mb-4">
                             ${logoUrl ? `<img src="${logoUrl}" alt="${title} logo" class="w-12 h-12 mr-4 object-contain">` : ''}
                             <h2 class="text-2xl font-bold">
-                                <a href="/api/${providerSlug}" class="text-blue-600 hover:underline">${highlightMatch(title, urlParams.get('q'))}</a>
+                                ${highlightMatch(title, urlParams.get('q'))}
                             </h2>
                         </div>
                         <p class="text-gray-600 mb-4">${description}</p>

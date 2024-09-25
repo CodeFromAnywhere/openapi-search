@@ -54,6 +54,8 @@ I'm happy after all search results:
 
 Then...
 
+🤔 put chat away, is not needed to be a value proposition of this site...
+
 🤔 email apis.guru
 
 🤔 Shall I put actionschema.com live?

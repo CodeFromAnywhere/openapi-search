@@ -7,7 +7,7 @@ export const GET = async (request: Request, context: any) => {
   if (!providerSlug) {
     return new Response("Not found", { status: 404 });
   }
-  const html = await fetch(new URL(request.url).origin + "/provider.html").then(
+  const html = await fetch(new URL(request.url).origin + "/openapi.html").then(
     (res) => res.text(),
   );
 
