@@ -38,3 +38,5 @@ Wishlist:
 # To reset...
 
 - Go to https://console.upstash.com/redis/f53b821b-184a-4081-ad47-5941b63d34e7?tab=cli and run `FLUSHDB`
+- Go to vector db and remove all vectors in the namespace
+- run `src/reset.cli.ts`

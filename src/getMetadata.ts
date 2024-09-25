@@ -1,5 +1,6 @@
 import { Index } from "@upstash/vector";
 import { Provider } from "./types.js";
+import { notEmpty } from "edge-util";
 export const getMetadata = async (context: {
   top?: "new" | "updated";
   category?: string;
@@ -26,7 +27,8 @@ export const getMetadata = async (context: {
     });
 
     const added = result.vectors
-      .map((x) => x.metadata as Provider)
+      .map((x) => x.metadata as Provider | undefined)
+      .filter(notEmpty)
       .filter((item) => {
         if (category && item.category !== category) {
           return false;
@@ -72,7 +74,7 @@ export const getMetadata = async (context: {
 
   const json = topLlist.reduce(
     (previous, current) => {
-      if (current === null) {
+      if (current === null || current === undefined) {
         return previous;
       }
       return {

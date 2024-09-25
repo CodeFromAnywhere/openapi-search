@@ -158,14 +158,14 @@ export const storeOpenapi = async (provider: Provider) => {
     console.error("Vector metadata doesn't fit for", provider.providerSlug);
   }
 
-  const upsertRresultPromise = await index.upsert({
+  const upsertResultPromise = await index.upsert({
     data: `${provider.providerSlug} - ${provider.info?.title || ""} - ${provider.info?.description || ""} - ${provider.categories?.join(",") || ""}`,
     id: provider.providerSlug,
     metadata: vectorMetadata,
   });
 
   const results = await Promise.all([
-    upsertRresultPromise,
+    upsertResultPromise,
     metadataSetPromise,
     securitySetPromise,
     openapiSetPromise,
