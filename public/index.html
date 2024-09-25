@@ -179,11 +179,11 @@
                             ${categories ? categories.map(cat => `<a href="?categories=${cat}" class="bg-gray-200 text-gray-700 px-2 py-1 rounded-full text-sm hover:bg-gray-300">${cat}</a>`).join('') : ''}
                         </div>
                         <div class="flex flex-wrap gap-2">
-                            <a href="/api/${providerSlug}/openapi.json" class="text-blue-600 hover:underline">JSON</a>
-                            <a href="/api/${providerSlug}/openapi.yaml" class="text-blue-600 hover:underline">YAML</a>
-                            <a href="/api/${providerSlug}/openapi.html" class="text-blue-600 hover:underline">Docs</a>
                             <a href="index.html?q=${encodeURIComponent(data)}" class="text-blue-600 hover:underline">Find similar</a>
                             <a href="https://www.actionschema.com/search.html?q=${encodeURIComponent(urlParams.get('q'))}&providerSlug=${providerSlug}" class="text-blue-600 hover:underline">Find operations</a>
+                            <a href="/api/${providerSlug}/openapi.html" class="text-blue-600 hover:underline">Docs</a>
+                            <a href="/api/${providerSlug}/openapi.json" class="text-blue-600 hover:underline">JSON</a>
+                            <a href="/api/${providerSlug}/openapi.yaml" class="text-blue-600 hover:underline">YAML</a>
                         </div>
                     </div>
                 `;
