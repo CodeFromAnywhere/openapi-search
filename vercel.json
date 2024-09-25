@@ -8,6 +8,7 @@
   ],
 
   "redirects": [{ "source": "/", "destination": "/index.html" }],
+  "regions": ["iad1"],
 
   "crons": [
     {
