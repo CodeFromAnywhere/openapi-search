@@ -34,3 +34,7 @@ Wishlist:
 - Automatically customise theming. A little is ok, but don't go to far as there may be
 - Create a documatation reference website like [readme.com](https://readme.com) (there are many)
 - Add weird custom logic that is non-standard to the OpenAPI. Instead, I aim to create a layer on top of openapis to improve the implementation of the standard. I'll use [actionschema](https://actionschema.com) for this.
+
+# To reset...
+
+- Go to https://console.upstash.com/redis/f53b821b-184a-4081-ad47-5941b63d34e7?tab=cli and run `FLUSHDB`

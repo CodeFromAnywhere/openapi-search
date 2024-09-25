@@ -136,7 +136,8 @@ export const storeOpenapi = async (provider: Provider) => {
 
   const proxyUrl = `https://openapisearch.com/api/${metadata.providerSlug}/openapi.json`;
   const isNew = metadata.openapiUrl === proxyUrl;
-  const openapiSize = JSON.stringify(openapi).length;
+  const openapiSize = openapi ? JSON.stringify(openapi).length : 0;
+
   const openapiNotTooBig = openapiSize < 1024 * 1024;
   if (openapi && isNew && !openapiNotTooBig) {
     console.error(`${metadata.providerSlug} too big openapi: ${openapiSize}`);
@@ -151,7 +152,7 @@ export const storeOpenapi = async (provider: Provider) => {
 
   // Only put it there if it fits in metadata.
   const vectorMetadata =
-    JSON.stringify(metadata).length > 48000 ? undefined : metadata;
+    !metadata || JSON.stringify(metadata).length > 48000 ? undefined : metadata;
 
   if (!vectorMetadata) {
     console.error("Vector metadata doesn't fit for", provider.providerSlug);
