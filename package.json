@@ -4,8 +4,8 @@
   "dependencies": {
     "@upstash/vector": "^1.1.5",
     "@vercel/functions": "^1.4.1",
-    "edge-util": "^0.0.56",
-    "openapi-util": "^0.0.160",
+    "edge-util": "^0.0.57",
+    "openapi-util": "^0.0.161",
     "yaml": "^2.5.0"
   },
   "devDependencies": {
