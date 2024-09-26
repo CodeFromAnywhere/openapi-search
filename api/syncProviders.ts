@@ -89,8 +89,7 @@ export const GET = async (request: Request) => {
 
       return false;
     })
-    .slice(0, 100)
-    .filter((x) => x.providerSlug === "github" || x.providerSlug === "shopify");
+    .slice(0, 250);
 
   console.log(
     "source providers",
