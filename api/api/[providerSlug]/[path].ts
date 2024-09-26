@@ -1,10 +1,10 @@
 import { fetchOpenapi, pruneOpenapi } from "openapi-util";
-import { redis } from "../../../src/redis.js";
 import { OpenapiDocument } from "openapi-util";
+import { Index } from "@upstash/vector";
 import * as yaml from "yaml";
+import { redis } from "../../../src/redis.js";
 import { Provider } from "../../../src/types.js";
 import { convertSwaggerToOpenapi } from "../../../src/convertSwaggerToOpenapi.js";
-import { Index } from "@upstash/vector";
 
 /**
 

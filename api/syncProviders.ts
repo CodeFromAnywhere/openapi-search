@@ -1,9 +1,8 @@
-import { hashCode, qStashFanOut, qStashSend } from "edge-util";
-import { getMetadata } from "../src/getMetadata.js";
-import { getAllProviders } from "../src/getAllProviders.js";
-import { redis } from "../src/redis.js";
 import { Index } from "@upstash/vector";
-import { storeOpenapi } from "./storeOpenapi.js";
+import { qStashFanOut } from "edge-util";
+import { getAllProviders } from "../src/getAllProviders.js";
+import { getMetadata } from "../src/getMetadata.js";
+import { redis } from "../src/redis.js";
 
 //when this is newer last indexation, we will update it always
 const codeLastUpdated = 1727346619275;

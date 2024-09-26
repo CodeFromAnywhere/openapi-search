@@ -1,8 +1,9 @@
 import { Index } from "@upstash/vector";
 import { mapMany } from "edge-util";
-import { fetchConvertedOpenapi } from "../src/fetchConvertedOpenapi";
-import { getMetadata } from "../src/getMetadata";
-import { getProviderDataString } from "../src/getProviderDataString";
+import { fetchConvertedOpenapi } from "../src/fetchConvertedOpenapi.js";
+import { getMetadata } from "../src/getMetadata.js";
+import { getProviderDataString } from "../src/getProviderDataString.js";
+
 export const config = {
   runtime: "edge", //NB: Must be iad1	us-east-1	Washington, D.C., USA for it to be fast with the vector
   regions: ["iad1"],

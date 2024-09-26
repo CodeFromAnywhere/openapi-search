@@ -1,17 +1,9 @@
-import {
-  fetchWithTimeout,
-  notEmpty,
-  tryParseJson,
-  tryParseYamlToJson,
-} from "edge-util";
-import { OpenapiDocument, summarizeOpenapi } from "openapi-util";
-import { embeddingsClient } from "../src/embeddings.js";
+import { Index } from "@upstash/vector";
+import { summarizeOpenapi } from "openapi-util";
+import { fetchConvertedOpenapi } from "../src/fetchConvertedOpenapi.js";
+import { getProviderDataString } from "../src/getProviderDataString.js";
 import { redis } from "../src/redis.js";
 import { Provider } from "../src/types.js";
-import { convertSwaggerToOpenapi } from "../src/convertSwaggerToOpenapi.js";
-import { Index } from "@upstash/vector";
-import { fetchConvertedOpenapi } from "../src/fetchConvertedOpenapi.js";
-import { getProviderDataString } from "../src/getProviderDataString";
 
 // TODO: make openapi-util edge-friendly to get unlimited scaling
 // https://vercel.com/docs/functions/runtimes#automatic-concurrency-scaling

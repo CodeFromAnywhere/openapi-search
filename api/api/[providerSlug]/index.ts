@@ -1,7 +1,6 @@
 import { Index } from "@upstash/vector";
-import { redis } from "../../../src/redis.js";
-import { Provider } from "../../../src/types.js";
 import { upCount } from "../../../src/upCount.js";
+
 export const config = { runtime: "edge" };
 export const GET = async (request: Request, context: any) => {
   const providerSlug = new URL(request.url).searchParams.get("providerSlug");

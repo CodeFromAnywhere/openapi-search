@@ -5,7 +5,6 @@ import {
   tryParseYamlToJson,
 } from "edge-util";
 import { redis } from "../src/redis.js";
-import { storeOpenapi } from "./storeOpenapi.js";
 
 const getAvailableSlug = async (slug: string) => {
   let suffix = 0;
