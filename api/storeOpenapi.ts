@@ -1,4 +1,9 @@
-import { notEmpty, tryParseJson, tryParseYamlToJson } from "edge-util";
+import {
+  fetchWithTimeout,
+  notEmpty,
+  tryParseJson,
+  tryParseYamlToJson,
+} from "edge-util";
 import { OpenapiDocument, summarizeOpenapi } from "openapi-util";
 import { embeddingsClient } from "../src/embeddings.js";
 import { redis } from "../src/redis.js";
@@ -14,6 +19,9 @@ export const calculateMetadata = async (
   controller: ReadableStreamDefaultController<any>,
 ) => {
   try {
+    const abortController = new AbortController();
+    const timeoutId = setTimeout(() => abortController.abort(), 10000);
+
     /**
   # Calculated data
 
@@ -32,7 +40,7 @@ export const calculateMetadata = async (
    */
     const openapiJson: OpenapiDocument | undefined = provider.openapi
       ? provider.openapi
-      : await fetch(provider.openapiUrl)
+      : await fetch(provider.openapiUrl, { signal: abortController.signal })
           .then(async (res) => {
             if (!res.ok) {
               return;
@@ -57,6 +65,8 @@ export const calculateMetadata = async (
           .catch((e) => {
             return undefined;
           });
+
+    clearTimeout(timeoutId);
 
     controller.enqueue(
       new TextEncoder().encode(
@@ -107,8 +117,11 @@ export const calculateMetadata = async (
 
     const logoUrl = provider.info?.["x-logo"]?.url;
 
+    const logoAbortController = new AbortController();
+    const timeoutId2 = setTimeout(() => abortController.abort(), 10000);
+
     const isLogoValid = logoUrl
-      ? await fetch(logoUrl)
+      ? await fetch(logoUrl, { signal: logoAbortController.signal })
           .then(
             (res) =>
               res.ok &&
@@ -117,6 +130,8 @@ export const calculateMetadata = async (
           )
           .catch((e) => {})
       : undefined;
+
+    clearTimeout(timeoutId2);
 
     if (isLogoValid === false) {
       console.log("LOGO FALSE", provider.providerSlug);
