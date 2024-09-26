@@ -84,7 +84,7 @@ export const GET = async (request: Request) => {
 
       return false;
     })
-    .slice(0, 10);
+    .slice(0, 100);
 
   console.log(
     "source providers",

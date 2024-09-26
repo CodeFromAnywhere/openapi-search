@@ -158,11 +158,7 @@ export const storeOpenapi = async (
   controller: ReadableStreamDefaultController<any>,
 ) => {
   const { openapi, securitySchemes, ...rest } = provider;
-
-  console.log("slug", provider.providerSlug);
   const extra = await calculateMetadata(provider, controller);
-  console.log("exgra", JSON.stringify(extra).length);
-
   const metadata: Provider = {
     ...rest,
     ...extra,
