@@ -1,24 +1,11 @@
 {
-  "include": ["middleware.ts", "api", "src"],
+  "compileOnSave": true,
+  "include": ["src", "api"],
   "compilerOptions": {
-    "target": "ESNext",
-    "lib": ["ES2022", "DOM"],
-    "module": "ESNext",
-    "outDir": "build",
-    "jsx": "react-jsx",
+    "lib": ["es2022", "DOM"],
     "types": ["node"],
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "allowJs": true,
-    "checkJs": false,
-    "isolatedModules": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "forceConsistentCasingInFileNames": true,
     "strict": true,
-    "skipLibCheck": true,
-    "sourceMap": true,
-    "declarationMap": true,
+    "outDir": "build",
     "declaration": true
   }
 }
