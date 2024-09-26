@@ -3,8 +3,8 @@ import {
   slugify,
   tryParseJson,
   tryParseYamlToJson,
-} from "../src/edge-util.js";
-import { redis } from "../src/redis.js";
+} from "../src/edge-util";
+import { redis } from "../src/redis";
 
 const getAvailableSlug = async (slug: string) => {
   let suffix = 0;

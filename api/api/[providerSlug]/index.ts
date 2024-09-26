@@ -1,5 +1,5 @@
 import { Index } from "@upstash/vector";
-import { upCount } from "../../../src/upCount.js";
+import { upCount } from "../../../src/upCount";
 
 // export const config = { runtime: "edge" };
 export const GET = async (request: Request, context: any) => {

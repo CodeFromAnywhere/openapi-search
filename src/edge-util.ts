@@ -1,3 +1,4 @@
+import { load } from "js-yaml";
 import { OpenAPIV3 } from "openapi-types";
 type NonFunctionKeyNames<T> = Exclude<
   {
@@ -9,8 +10,6 @@ type NonFunctionKeyNames<T> = Exclude<
 type RemoveFunctions<T> = Pick<T, NonFunctionKeyNames<T>>;
 
 export type OpenapiDocument = RemoveFunctions<OpenAPIV3.Document>;
-
-import { load } from "js-yaml";
 
 /**
  * TODO: find a way to return the correct type interface

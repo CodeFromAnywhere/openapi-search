@@ -1,7 +1,7 @@
 import { Index } from "@upstash/vector";
-import { getTopCount } from "./getCount.js";
-import { notEmpty } from "./edge-util.js";
-import { Provider } from "./types.js";
+import { getTopCount } from "./getCount";
+import { notEmpty } from "./edge-util";
+import { Provider } from "./types";
 
 export const getPopular = async () => {
   const topProviderSlugs = await getTopCount("provider_expands", 100);

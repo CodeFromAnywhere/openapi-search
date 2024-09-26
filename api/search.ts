@@ -1,6 +1,6 @@
 import { Index } from "@upstash/vector";
-import { notEmpty } from "../src/edge-util.js";
-import { upCount } from "../src/upCount.js";
+import { notEmpty } from "../src/edge-util";
+import { upCount } from "../src/upCount";
 
 export const config = {
   runtime: "edge", //NB: Must be iad1	us-east-1	Washington, D.C., USA for it to be fast with the vector

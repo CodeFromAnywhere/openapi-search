@@ -1,5 +1,5 @@
-import { hashCode, notEmpty, onlyUnique2 } from "./edge-util.js";
-import { Provider, ApisGuruList } from "./types.js";
+import { hashCode, notEmpty, onlyUnique2 } from "./edge-util";
+import { Provider, ApisGuruList } from "./types";
 
 /** should take under 10 sec to get providers from these sources:
  *

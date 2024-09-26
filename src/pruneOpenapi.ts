@@ -5,8 +5,8 @@ import {
   pascalCase,
   OpenapiDocument,
   mergeObjectsArray,
-} from "./edge-util.js";
-import { resolveSchemaRecursive } from "./resolveSchemaRecursive.js";
+} from "./edge-util";
+import { resolveSchemaRecursive } from "./resolveSchemaRecursive";
 
 /**
  * Core functionality to prune an openapi.

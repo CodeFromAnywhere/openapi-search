@@ -1,6 +1,6 @@
 import { Index } from "@upstash/vector";
-import { Provider } from "./types.js";
-import { notEmpty } from "./edge-util.js";
+import { Provider } from "./types";
+import { notEmpty } from "./edge-util";
 export const getMetadata = async (context: {
   top?: "new" | "updated";
   source?: string;

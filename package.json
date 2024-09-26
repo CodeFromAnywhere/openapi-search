@@ -1,9 +1,8 @@
 {
   "name": "openapi-search",
-  "type": "module",
   "dependencies": {
     "@apidevtools/json-schema-ref-parser": "^11.7.0",
-    "@upstash/vector": "^1.1.5",
+    "@upstash/vector": "^1.1.6",
     "js-yaml": "^4.1.0",
     "json-ptr": "^3.1.1",
     "openapi-types": "^12.1.3",

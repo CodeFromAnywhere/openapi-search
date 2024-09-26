@@ -3,8 +3,8 @@ import {
   camelCase,
   notEmpty,
   fetchOpenapi,
-} from "./edge-util.js";
-import { Provider } from "./types.js";
+} from "./edge-util";
+import { Provider } from "./types";
 
 const DELTA_MS = 24 * 3600 * 1000;
 

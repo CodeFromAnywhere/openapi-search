@@ -1,4 +1,4 @@
-import { OpenapiDocument } from "./edge-util.js";
+import { OpenapiDocument } from "./edge-util";
 
 // see: https://vercel.com/docs/functions/edge-middleware/limitations#limits-on-fetch-api
 export const MAX_CONCURRENCY = 6;

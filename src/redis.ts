@@ -1,4 +1,4 @@
-import { tryParseJson } from "./edge-util.js";
+import { tryParseJson } from "./edge-util";
 
 // export const getUpstashRedisRangeKeys = async (baseKey: string | undefined) => {
 //   const redis = Redis.fromEnv();

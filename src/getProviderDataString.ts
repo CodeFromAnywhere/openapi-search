@@ -1,5 +1,5 @@
-import { notEmpty } from "./edge-util.js";
-import { Provider } from "./types.js";
+import { notEmpty } from "./edge-util";
+import { Provider } from "./types";
 export const getProviderDataString = (provider: Provider) => {
   return [
     provider.providerSlug,

@@ -1,5 +1,5 @@
-import { qStashFanOut } from "../src/edge-util.js";
-import { getMyGithubProviders } from "../src/getMyGithubProviders.js";
+import { qStashFanOut } from "../src/edge-util";
+import { getMyGithubProviders } from "../src/getMyGithubProviders";
 
 export const GET = async (request: Request) => {
   const auth = request.headers.get("Authorization")?.slice("Bearer ".length);

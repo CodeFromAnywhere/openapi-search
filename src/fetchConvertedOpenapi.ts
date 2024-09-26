@@ -2,9 +2,9 @@ import {
   tryParseJson,
   tryParseYamlToJson,
   OpenapiDocument,
-} from "../src/edge-util.js";
-import { convertSwaggerToOpenapi } from "../src/convertSwaggerToOpenapi.js";
-import { Provider } from "./types.js";
+} from "../src/edge-util";
+import { convertSwaggerToOpenapi } from "../src/convertSwaggerToOpenapi";
+import { Provider } from "./types";
 
 export const fetchConvertedOpenapi = async (
   provider: Provider,

@@ -1,4 +1,4 @@
-import { getCountMatches, getTopCount } from "../src/getCount.js";
+import { getCountMatches, getTopCount } from "../src/getCount";
 
 export const config = { runtime: "edge" };
 

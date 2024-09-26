@@ -1,5 +1,5 @@
-import { getMetadata } from "../src/getMetadata.js";
-import { getPopular } from "../src/getPopular.js";
+import { getMetadata } from "../src/getMetadata";
+import { getPopular } from "../src/getPopular";
 
 export const GET = async (request: Request) => {
   const top = new URL(request.url).searchParams.get("top") || undefined;

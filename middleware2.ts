@@ -1,4 +1,4 @@
-import { generateHtmlMiddleware } from "./src/generateHtmlMiddleware.js";
+import { generateHtmlMiddleware } from "./src/generateHtmlMiddleware";
 
 export const config = {
   matcher: ["/:path"],

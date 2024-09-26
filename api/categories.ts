@@ -1,4 +1,4 @@
-import { getMetadata } from "../src/getMetadata.js";
+import { getMetadata } from "../src/getMetadata";
 
 export const GET = async () => {
   const obj = await getMetadata({});
@@ -15,12 +15,9 @@ export const GET = async () => {
 
   const sortedCounts = Object.entries(counts)
     .sort((a, b) => b[1] - a[1])
-    .reduce(
-      (previous, current) => {
-        return { ...previous, [current[0]]: current[1] };
-      },
-      {} as { [x: string]: number },
-    );
+    .reduce((previous, current) => {
+      return { ...previous, [current[0]]: current[1] };
+    }, {} as { [x: string]: number });
 
   return new Response(JSON.stringify(sortedCounts), {
     status: 200,
