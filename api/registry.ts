@@ -15,9 +15,14 @@ export const GET = async () => {
     const result = await index.range({
       cursor,
       limit: 1000,
+      includeMetadata: true,
     });
 
-    ids = ids.concat(result.vectors.map((x) => x.id));
+    ids = ids.concat(
+      result.vectors
+        .filter((x) => x.metadata && !x.metadata.isOpenapiInvalid)
+        .map((x) => x.id),
+    );
 
     if (result.nextCursor === "" || !result.nextCursor) {
       break;

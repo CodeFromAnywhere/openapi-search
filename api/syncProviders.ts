@@ -1,4 +1,4 @@
-import { hashCode, upstashFanOut } from "edge-util";
+import { hashCode, qStashFanOut, qStashSend } from "edge-util";
 import { getMetadata } from "../src/getMetadata.js";
 import { getAllProviders } from "../src/getAllProviders.js";
 import { redis } from "../src/redis.js";
@@ -109,11 +109,22 @@ export const GET = async (request: Request) => {
     return new Response("No updated providers", { status: 200 });
   }
 
+  const pages = new Array(Math.ceil(Object.keys(alreadyProviders).length / 500))
+    .fill(null)
+    .map((_, index) => index + 1);
+  const resultOnline = await qStashFanOut(
+    "https://openapisearch.com/checkOpenapiOnline",
+    pages.map((page) => ({ page })),
+    300,
+    process.env.CRON_SECRET,
+  );
+
   // much cleaner fan-out pattern
-  const result = await upstashFanOut(
+  const result = await qStashFanOut(
     "https://openapisearch.com/storeOpenapi",
     updatedProviders,
     0.01,
+    process.env.CRON_SECRET,
   );
 
   // for local test

@@ -1,4 +1,4 @@
-import { upstashFanOut } from "edge-util";
+import { qStashFanOut } from "edge-util";
 import { getMyGithubProviders } from "../src/getMyGithubProviders.js";
 
 export const GET = async (request: Request) => {
@@ -18,7 +18,7 @@ export const GET = async (request: Request) => {
     return new Response("No providers", { status: 500 });
   }
   // much cleaner fan-out pattern
-  const result = await upstashFanOut(
+  const result = await qStashFanOut(
     "https://openapisearch.com/storeOpenapi",
     providers,
   );
