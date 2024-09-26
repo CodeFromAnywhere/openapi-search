@@ -3,7 +3,9 @@
 
   "providers": {
     "jina-reader": {
-      "info": { "description": "Read webpages" },
+      "info": {
+        "description": "Read webpages in markdown, html, or screenshot"
+      },
       "openapiUrl": "https://openapi.actionschema.com/jina-reader.json"
     },
 
