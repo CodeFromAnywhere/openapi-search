@@ -6,7 +6,7 @@ import { Index } from "@upstash/vector";
 import { storeOpenapi } from "./storeOpenapi.js";
 
 //when this is newer last indexation, we will update it always
-const codeLastUpdated = 1727345243328;
+const codeLastUpdated = 1727346619275;
 export const GET = async (request: Request) => {
   const auth = request.headers.get("Authorization")?.slice("Bearer ".length);
   if (
