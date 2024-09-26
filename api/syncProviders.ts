@@ -60,39 +60,35 @@ export const GET = async (request: Request) => {
     );
   }
 
-  const slicedProviders = sourceProviders.slice(0, 100);
-  const updatedProviders = slicedProviders.filter((x) => {
-    const already = alreadyProviders?.[x.providerSlug];
+  const updatedProviders = sourceProviders
+    .filter((x) => {
+      const already = alreadyProviders?.[x.providerSlug];
 
-    if (!already || !already.inserted || !already.updated) {
-      console.log(x.providerSlug, "not already");
-      return true;
-    }
+      if (!already || !already.inserted || !already.updated) {
+        return true;
+      }
 
-    const isAltered = !x.updated && already.sourceHash !== x.sourceHash;
-    if (isAltered) {
-      console.log(x.providerSlug, "is altered");
-      return true;
-    }
+      const isAltered = !x.updated && already.sourceHash !== x.sourceHash;
+      if (isAltered) {
+        return true;
+      }
 
-    if (
-      x.updated &&
-      new Date(x.updated).valueOf() > new Date(already.updated).valueOf()
-    ) {
-      console.log(x.providerSlug, "updated");
+      if (
+        x.updated &&
+        new Date(x.updated).valueOf() > new Date(already.updated).valueOf()
+      ) {
+        return true;
+      }
 
-      return true;
-    }
+      const codeUpdated =
+        codeLastUpdated > new Date(already.inserted).valueOf();
+      if (codeUpdated) {
+        return true;
+      }
 
-    const codeUpdated = codeLastUpdated > new Date(already.inserted).valueOf();
-    if (codeUpdated) {
-      console.log(x.providerSlug, "code updated");
-
-      return true;
-    }
-
-    return false;
-  });
+      return false;
+    })
+    .slice(0, 100);
 
   console.log(
     "source providers",
