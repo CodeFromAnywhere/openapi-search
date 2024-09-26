@@ -197,10 +197,15 @@ export const storeOpenapi = async (
     ? JSON.stringify(openapi).length >= 1024 * 1024
     : undefined;
 
-  if (openapi && !hasExternalStorage && openapiTooBig) {
-    console.error(`${metadata.providerSlug} too big openapi`);
-  } else {
-    await redis.set(`openapi-store.openapi.${metadata.providerSlug}`, openapi);
+  if (openapi && !hasExternalStorage) {
+    if (openapiTooBig) {
+      console.error(`${metadata.providerSlug} too big openapi`);
+    } else {
+      await redis.set(
+        `openapi-store.openapi.${metadata.providerSlug}`,
+        openapi,
+      );
+    }
   }
 
   const index = Index.fromEnv();

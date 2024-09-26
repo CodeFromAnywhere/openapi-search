@@ -156,7 +156,12 @@ export const redis = {
     );
 
     if (!storeCodeResponse.ok) {
-      console.log("not stored", storeCodeResponse.status);
+      console.log(
+        "not stored",
+        storeCodeResponse.status,
+        storeCodeResponse.statusText,
+        await storeCodeResponse.text(),
+      );
     }
 
     return;
