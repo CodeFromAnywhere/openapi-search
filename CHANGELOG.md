@@ -122,3 +122,9 @@ The art of finishing
 - ✅ Generate html for `openapi-search-text` and put html into openapisearch.com (manually for now)
 
 🎉🎉🎉 At this point actionschema.com and openapisearch.com are "shareable". 🎉🎉🎉
+
+# sept 26 refactor
+
+- ✅ improve openapisearch index so its sync is almost optimal
+- ✅ Ensure metadata fits
+- ✅ Ensure daily cron is cheap/efficient
