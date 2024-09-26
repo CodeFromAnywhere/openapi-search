@@ -1,5 +1,8 @@
-import { tryParseJson, tryParseYamlToJson } from "edge-util";
-import { OpenapiDocument } from "openapi-util";
+import {
+  tryParseJson,
+  tryParseYamlToJson,
+  OpenapiDocument,
+} from "../src/edge-util.js";
 import { convertSwaggerToOpenapi } from "../src/convertSwaggerToOpenapi.js";
 import { Provider } from "./types.js";
 

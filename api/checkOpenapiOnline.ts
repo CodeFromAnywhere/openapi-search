@@ -1,5 +1,5 @@
 import { Index } from "@upstash/vector";
-import { mapMany } from "edge-util";
+import { mapMany } from "../src/edge-util.js";
 import { fetchConvertedOpenapi } from "../src/fetchConvertedOpenapi.js";
 import { getMetadata } from "../src/getMetadata.js";
 import { getProviderDataString } from "../src/getProviderDataString.js";

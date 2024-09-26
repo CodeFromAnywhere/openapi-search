@@ -1,4 +1,4 @@
-import { OpenapiDocument } from "openapi-util";
+import { OpenapiDocument } from "./edge-util.js";
 
 /** NB: Not sure on the ratelimit on this, or logging */
 export const convertSwaggerToOpenapi = async (swaggerUrl: string) => {

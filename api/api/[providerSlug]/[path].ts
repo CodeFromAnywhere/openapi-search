@@ -1,11 +1,11 @@
-import { fetchOpenapi, pruneOpenapi } from "openapi-util";
-import { OpenapiDocument } from "openapi-util";
+import { fetchOpenapi, OpenapiDocument } from "../../../src/edge-util.js";
 import { Index } from "@upstash/vector";
 import * as yaml from "yaml";
 
 import { redis } from "../../../src/redis.js";
 import { Provider } from "../../../src/types.js";
 import { convertSwaggerToOpenapi } from "../../../src/convertSwaggerToOpenapi.js";
+import { pruneOpenapi } from "../../../src/pruneOpenapi.js";
 
 /**
 

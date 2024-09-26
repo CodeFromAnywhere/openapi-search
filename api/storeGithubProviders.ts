@@ -1,4 +1,4 @@
-import { qStashFanOut } from "edge-util";
+import { qStashFanOut } from "../src/edge-util.js";
 import { getMyGithubProviders } from "../src/getMyGithubProviders.js";
 
 export const GET = async (request: Request) => {

@@ -1,5 +1,5 @@
 import { Index } from "@upstash/vector";
-import { notEmpty } from "edge-util";
+import { notEmpty } from "../src/edge-util.js";
 import { upCount } from "../src/upCount.js";
 
 export const config = {

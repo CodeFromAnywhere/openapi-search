@@ -1,6 +1,10 @@
-import { OpenapiDocument, camelCase, notEmpty } from "edge-util";
+import {
+  OpenapiDocument,
+  camelCase,
+  notEmpty,
+  fetchOpenapi,
+} from "./edge-util.js";
 import { Provider } from "./types.js";
-import { fetchOpenapi } from "openapi-util";
 
 const DELTA_MS = 24 * 3600 * 1000;
 

@@ -1,4 +1,4 @@
-import { tryParseJson, tryParseYamlToJson } from "edge-util";
+import { tryParseJson, tryParseYamlToJson } from "./edge-util.js";
 
 /**
  * Sets timeout to 5 minutes by default

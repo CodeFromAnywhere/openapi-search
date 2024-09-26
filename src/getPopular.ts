@@ -1,6 +1,6 @@
 import { Index } from "@upstash/vector";
 import { getTopCount } from "./getCount.js";
-import { notEmpty } from "edge-util";
+import { notEmpty } from "./edge-util.js";
 import { Provider } from "./types.js";
 
 export const getPopular = async () => {

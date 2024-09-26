@@ -2,13 +2,15 @@
   "name": "openapi-search",
   "type": "module",
   "dependencies": {
+    "@apidevtools/json-schema-ref-parser": "^11.7.0",
     "@upstash/vector": "^1.1.5",
-    "@vercel/functions": "^1.4.1",
-    "edge-util": "^0.0.57",
-    "openapi-util": "^0.0.161",
+    "js-yaml": "^4.1.0",
+    "json-ptr": "^3.1.1",
+    "openapi-types": "^12.1.3",
     "yaml": "^2.5.0"
   },
   "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
     "@types/node": "^22.5.1"
   }
 }

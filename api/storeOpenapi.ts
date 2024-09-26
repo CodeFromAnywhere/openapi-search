@@ -1,5 +1,4 @@
 import { Index } from "@upstash/vector";
-import { summarizeOpenapi } from "openapi-util";
 import { fetchConvertedOpenapi } from "../src/fetchConvertedOpenapi.js";
 import { getProviderDataString } from "../src/getProviderDataString.js";
 import { redis } from "../src/redis.js";
@@ -18,13 +17,13 @@ export const calculateMetadata = async (
       controller,
     );
 
-    const stringSummary = !convertedOpenapi
-      ? undefined
-      : ((await summarizeOpenapi(
-          convertedOpenapi,
-          provider.openapiUrl,
-          false,
-        )) as string);
+    // const stringSummary = !convertedOpenapi
+    //   ? undefined
+    //   : ((await summarizeOpenapi(
+    //       convertedOpenapi,
+    //       provider.openapiUrl,
+    //       false,
+    //     )) as string);
 
     const basePath = convertedOpenapi?.servers?.[0]?.url?.startsWith("https://")
       ? convertedOpenapi?.servers?.[0]?.url
@@ -73,7 +72,7 @@ export const calculateMetadata = async (
       ),
     );
 
-    return { basePath, domain, stringSummary, isOpenapiInvalid, info };
+    return { basePath, domain, isOpenapiInvalid, info };
   } catch (e) {
     console.log("error calculating metadata for " + provider.providerSlug, e);
     return { isOpenapiInvalid: true, metadataError: String(e) };
@@ -85,10 +84,10 @@ export const storeOpenapi = async (
   controller?: ReadableStreamDefaultController<any>,
 ) => {
   const { openapi, securitySchemes, ...rest } = provider;
-  const { stringSummary, ...extra } = await calculateMetadata(
-    provider,
-    controller,
-  );
+  const {
+    //stringSummary,
+    ...extra
+  } = await calculateMetadata(provider, controller);
 
   const metadata: Provider = {
     ...rest,
@@ -134,12 +133,12 @@ export const storeOpenapi = async (
     : metadata;
 
   // set metadata
-  if (stringSummary) {
-    const metadataSetPromise = redis.set(
-      `openapi-store.summary.${metadata.providerSlug}`,
-      stringSummary,
-    );
-  }
+  // if (stringSummary) {
+  //   const metadataSetPromise = redis.set(
+  //     `openapi-store.summary.${metadata.providerSlug}`,
+  //     stringSummary,
+  //   );
+  // }
 
   //set security
   // const securitySetPromise = securitySchemes

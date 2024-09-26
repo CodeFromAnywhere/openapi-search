@@ -1,5 +1,5 @@
 import { Index } from "@upstash/vector";
-import { qStashFanOut } from "edge-util";
+import { qStashFanOut } from "../src/edge-util.js";
 import { getAllProviders } from "../src/getAllProviders.js";
 import { getMetadata } from "../src/getMetadata.js";
 import { redis } from "../src/redis.js";

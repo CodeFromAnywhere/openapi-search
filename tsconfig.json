@@ -4,8 +4,10 @@
   "compilerOptions": {
     "lib": ["es2022", "DOM"],
     "types": ["node"],
+    "downlevelIteration": true,
     "strict": true,
     "outDir": "build",
-    "declaration": true
+    "declaration": true,
+    "skipLibCheck": true
   }
 }
