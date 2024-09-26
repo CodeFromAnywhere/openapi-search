@@ -1,4 +1,7 @@
-🟠 Add daily OpenAPI URL check
+# Priority
+
+- Add daily OpenAPI URL check
+- Fix registration (/set) and ensure it doesn't get abused
 
 # Promotion
 
@@ -38,7 +41,7 @@ Use generated description for vector.
 
 # Chat
 
-Let's create multiple GPT4O chats:
+Let's create multiple GPT4o chats:
 
 - 1 for searching through providers, categories, operations, and related. This can be brought forward nicely.
 - 1 for each OpenAPI: has openapi-summary in-context, can redirect to take action in a specific operation.
