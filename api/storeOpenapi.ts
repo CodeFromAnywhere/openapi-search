@@ -58,6 +58,12 @@ export const calculateMetadata = async (
             return undefined;
           });
 
+    controller.enqueue(
+      new TextEncoder().encode(
+        "\n\ndata: " + JSON.stringify({ status: "fetched" }),
+      ),
+    );
+
     const isSwagger =
       (openapiJson as any)?.swagger ||
       !openapiJson?.openapi ||
@@ -66,6 +72,12 @@ export const calculateMetadata = async (
     const convertedOpenapi = isSwagger
       ? await convertSwaggerToOpenapi(provider.openapiUrl)
       : openapiJson;
+
+    controller.enqueue(
+      new TextEncoder().encode(
+        "\n\ndata: " + JSON.stringify({ status: "converted" }),
+      ),
+    );
 
     const isOpenapiInvalid = !convertedOpenapi;
 
@@ -96,12 +108,14 @@ export const calculateMetadata = async (
     const logoUrl = provider.info?.["x-logo"]?.url;
 
     const isLogoValid = logoUrl
-      ? await fetch(logoUrl).then(
-          (res) =>
-            res.ok &&
-            res.headers.get("content-type")?.startsWith("image/") &&
-            !logoUrl.endsWith(".png.svg"),
-        )
+      ? await fetch(logoUrl)
+          .then(
+            (res) =>
+              res.ok &&
+              res.headers.get("content-type")?.startsWith("image/") &&
+              !logoUrl.endsWith(".png.svg"),
+          )
+          .catch((e) => {})
       : undefined;
 
     if (isLogoValid === false) {
@@ -111,8 +125,15 @@ export const calculateMetadata = async (
 
     const info = { ...provider.info };
 
+    controller.enqueue(
+      new TextEncoder().encode(
+        "\n\ndata: " + JSON.stringify({ status: "logo" }),
+      ),
+    );
+
     return { basePath, domain, stringSummary, isOpenapiInvalid, info };
   } catch (e) {
+    console.log("error calculating metadata for " + provider.providerSlug, e);
     return {};
   }
 };
