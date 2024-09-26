@@ -1,3 +1,5 @@
+🟠 Add daily OpenAPI URL check
+
 # Promotion
 
 Plan a full day on this!!!!
