@@ -124,7 +124,13 @@ export const storeOpenapi = async (
   const { openapi, securitySchemes, ...rest } = provider;
 
   const extra = await calculateMetadata(provider, controller);
-  const metadata: Provider = { ...rest, ...extra };
+  const metadata: Provider = {
+    ...rest,
+    ...extra,
+    // NB: metadata must be there!
+    added: rest.added || new Date(Date.now()).toISOString(),
+    updated: rest.updated || new Date(Date.now()).toISOString(),
+  };
 
   const metadataTooLarge = JSON.stringify(metadata).length > 48000;
 
