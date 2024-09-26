@@ -29,6 +29,7 @@ export const getMetadata = async (context: {
     const added = result.vectors
       .map((x) => x.metadata as Provider | undefined)
       .filter(notEmpty)
+      .filter((item) => !item.isOpenapiInvalid)
       .filter((item) => {
         if (source && item.source !== source) {
           // must be in specified category
