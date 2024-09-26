@@ -1,7 +1,7 @@
 import { Index } from "@upstash/vector";
 import { upCount } from "../../../src/upCount.js";
 
-export const config = { runtime: "edge" };
+// export const config = { runtime: "edge" };
 export const GET = async (request: Request, context: any) => {
   const providerSlug = new URL(request.url).searchParams.get("providerSlug");
   if (!providerSlug) {
