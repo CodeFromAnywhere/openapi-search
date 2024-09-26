@@ -91,7 +91,7 @@ export const POST = async (request: Request) => {
   //   source: "register",
   //   securitySchemes: json.securitySchemes,
   // });
-  const proxyUrl = undefined;
 
+  const proxyUrl = undefined;
   return new Response(proxyUrl, { status: 201 });
 };

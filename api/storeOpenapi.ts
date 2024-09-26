@@ -16,7 +16,7 @@ import { Index } from "@upstash/vector";
 // export const config = {runtime:"edge"}
 export const calculateMetadata = async (
   provider: Provider,
-  controller: ReadableStreamDefaultController<any>,
+  controller?: ReadableStreamDefaultController<any>,
 ) => {
   try {
     const abortController = new AbortController();
@@ -68,7 +68,7 @@ export const calculateMetadata = async (
 
     clearTimeout(timeoutId);
 
-    controller.enqueue(
+    controller?.enqueue(
       new TextEncoder().encode(
         "\n\ndata: " + JSON.stringify({ status: "fetched" }),
       ),
@@ -83,7 +83,7 @@ export const calculateMetadata = async (
       ? await convertSwaggerToOpenapi(provider.openapiUrl)
       : openapiJson;
 
-    controller.enqueue(
+    controller?.enqueue(
       new TextEncoder().encode(
         "\n\ndata: " + JSON.stringify({ status: "converted" }),
       ),
@@ -140,7 +140,7 @@ export const calculateMetadata = async (
 
     const info = { ...provider.info };
 
-    controller.enqueue(
+    controller?.enqueue(
       new TextEncoder().encode(
         "\n\ndata: " + JSON.stringify({ status: "logo" }),
       ),
@@ -155,10 +155,14 @@ export const calculateMetadata = async (
 
 export const storeOpenapi = async (
   provider: Provider,
-  controller: ReadableStreamDefaultController<any>,
+  controller?: ReadableStreamDefaultController<any>,
 ) => {
   const { openapi, securitySchemes, ...rest } = provider;
-  const extra = await calculateMetadata(provider, controller);
+  const { stringSummary, ...extra } = await calculateMetadata(
+    provider,
+    controller,
+  );
+
   const metadata: Provider = {
     ...rest,
     ...extra,
@@ -172,14 +176,17 @@ export const storeOpenapi = async (
 
   if (metadataTooLarge) {
     console.error("Vector metadata doesn't fit for", provider.providerSlug);
+    console.log(metadata);
     return;
   }
 
-  // // set metadata
-  // const metadataSetPromise = redis.set(
-  //   `openapi-store.metadata.${metadata.providerSlug}`,
-  //   metadata,
-  // );
+  // set metadata
+  if (stringSummary) {
+    const metadataSetPromise = redis.set(
+      `openapi-store.summary.${metadata.providerSlug}`,
+      stringSummary,
+    );
+  }
 
   //set security
   // const securitySetPromise = securitySchemes

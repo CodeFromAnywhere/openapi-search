@@ -3,6 +3,7 @@ import { getMetadata } from "../src/getMetadata.js";
 import { getAllProviders } from "../src/getAllProviders.js";
 import { redis } from "../src/redis.js";
 import { Index } from "@upstash/vector";
+import { storeOpenapi } from "./storeOpenapi.js";
 
 //when this is newer last indexation, we will update it always
 const codeLastUpdated = 1727345243328;
@@ -88,7 +89,8 @@ export const GET = async (request: Request) => {
 
       return false;
     })
-    .slice(0, 100);
+    .slice(0, 100)
+    .filter((x) => x.providerSlug === "github" || x.providerSlug === "shopify");
 
   console.log(
     "source providers",
@@ -114,6 +116,17 @@ export const GET = async (request: Request) => {
     updatedProviders,
     0.01,
   );
+
+  // for local test
+  // const result = {
+  //   error: undefined,
+  //   list: await Promise.all(
+  //     updatedProviders.map(async (pro) => {
+  //       await storeOpenapi(pro);
+  //       return { error: undefined };
+  //     }),
+  //   ),
+  // };
 
   if (result.error) {
     return new Response(result.error, { status: 500 });
