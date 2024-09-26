@@ -38,8 +38,8 @@ Wishlist:
 
 Currently indexation has many errors and bad validation. **Improved API indexation and validation** is top priority
 
+- ✅ improve openapisearch index so its sync is almost optimal
 - There's still a bug in providerslug being slugified containing things like ':'. this shouldn't be removed!
-- Add createdAt date to openapisearch storage
 - Ensure daily cron is cheap/efficient
 - ❌ openapisearch.com: Vector metadata doesn't fit for github.com and a dozen others. Let's debug the github.com one
 - Ensure if metadata doesn't fit, we skip it.
