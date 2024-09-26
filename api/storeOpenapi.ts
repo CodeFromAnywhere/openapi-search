@@ -149,7 +149,7 @@ export const calculateMetadata = async (
     return { basePath, domain, stringSummary, isOpenapiInvalid, info };
   } catch (e) {
     console.log("error calculating metadata for " + provider.providerSlug, e);
-    return {};
+    return { isOpenapiInvalid: true, metadataError: String(e) };
   }
 };
 
