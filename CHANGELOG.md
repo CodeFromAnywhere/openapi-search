@@ -123,8 +123,20 @@ The art of finishing
 
 🎉🎉🎉 At this point actionschema.com and openapisearch.com are "shareable". 🎉🎉🎉
 
-# sept 26 refactor
+# sept 26 refactor: MAKING OPENAPISEARCH STABLE
 
 - ✅ improve openapisearch index so its sync is almost optimal
 - ✅ Ensure metadata fits
 - ✅ Ensure daily cron is cheap/efficient
+- ✅ make openapi-search work within CJS context
+- ✅ Add openapisearch daily url check and update isOpenapiInvalid accordingly.
+- ✅ Ensure metadata exposes 'inserted' correctly
+
+## Calculated data
+
+Create `calculateProperties` on backend to augment metadata, stored upon updating a provider in separate .calculated key
+
+- ✅ Fetch OpenAPI and convert to 3.x
+- ✅ Mark as invalid if it can't be made 3.x
+- ✅ Add serverUrl to the provider too, even if no servers[0].url is found (then use the openapi domain)
+- ✅ Generate openapi summary of OpenAPI + some metadta we already had

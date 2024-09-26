@@ -40,4 +40,22 @@ This is the intended daily synchronisation process which ensures search results 
 
 # TODO
 
-See [backlog](BACKLOG.md)
+# Stabilize + Cache chat.actionschema.com
+
+- Fix problem with weird anthropic generations
+- Cach inputs if no tools are left or if allowed to cache
+
+# Calculated data
+
+- Bring back openapiSummary without dependency
+- Create info.x-generated-description for all items based on summary and other metadata.
+- Create categories using LLM too (using x-generated-description and hardcoded categories)
+- 10 related providers out of 50 using search + LLM
+- Reindex all with generated description in data
+
+# MAKING ACTIONSCHEMA STABLE:
+
+1. At semantic-operation-search, sync with metadata
+2. ActionSchema Lucky search should work and be fast
+
+For more ideas and wishes, see [backlog](BACKLOG.md)
