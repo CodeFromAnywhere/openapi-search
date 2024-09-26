@@ -22,6 +22,8 @@ export type Provider = {
   added?: string;
   /** iso timestring */
   updated?: string;
+  /** Iso timestring of wehn it was inserted, not created or updated */
+  inserted?: string;
   originalOpenapiUrl?: string;
   openapiUrl: string;
   categories?: string[];

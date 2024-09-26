@@ -165,6 +165,7 @@ export const storeOpenapi = async (
     // NB: metadata must be there!
     added: rest.added || new Date(Date.now()).toISOString(),
     updated: rest.updated || new Date(Date.now()).toISOString(),
+    inserted: new Date(Date.now()).toISOString(),
   };
 
   const metadataTooLarge = JSON.stringify(metadata).length > 48000;

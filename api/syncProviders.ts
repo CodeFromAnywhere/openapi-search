@@ -5,7 +5,7 @@ import { redis } from "../src/redis.js";
 import { Index } from "@upstash/vector";
 
 //when this is newer last indexation, we will update it always
-const codeLastUpdated = 1727175997479;
+const codeLastUpdated = 1727345243328;
 export const GET = async (request: Request) => {
   const auth = request.headers.get("Authorization")?.slice("Bearer ".length);
   if (
@@ -60,31 +60,39 @@ export const GET = async (request: Request) => {
     );
   }
 
-  const updatedProviders = sourceProviders
-    .filter((x) => {
-      const already = alreadyProviders?.[x.providerSlug];
+  const slicedProviders = sourceProviders.slice(0, 100);
+  const updatedProviders = slicedProviders.filter((x) => {
+    const already = alreadyProviders?.[x.providerSlug];
 
-      if (!already || !already.updated) {
-        return true;
-      }
+    if (!already || !already.inserted || !already.updated) {
+      console.log(x.providerSlug, "not already");
+      return true;
+    }
 
-      const isAltered = already.sourceHash !== x.sourceHash;
-      if (isAltered) {
-        return true;
-      }
+    const isAltered = !x.updated && already.sourceHash !== x.sourceHash;
+    if (isAltered) {
+      console.log(x.providerSlug, "is altered");
+      return true;
+    }
 
-      if (x.updated && x.updated > already.updated) {
-        return true;
-      }
+    if (
+      x.updated &&
+      new Date(x.updated).valueOf() > new Date(already.updated).valueOf()
+    ) {
+      console.log(x.providerSlug, "updated");
 
-      const codeUpdated = codeLastUpdated > new Date(already.updated).valueOf();
-      if (codeUpdated) {
-        return true;
-      }
+      return true;
+    }
 
-      return false;
-    })
-    .slice(0, 100);
+    const codeUpdated = codeLastUpdated > new Date(already.inserted).valueOf();
+    if (codeUpdated) {
+      console.log(x.providerSlug, "code updated");
+
+      return true;
+    }
+
+    return false;
+  });
 
   console.log(
     "source providers",
