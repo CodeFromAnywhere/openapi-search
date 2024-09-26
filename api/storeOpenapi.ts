@@ -123,7 +123,10 @@ export const storeOpenapi = async (
 ) => {
   const { openapi, securitySchemes, ...rest } = provider;
 
+  console.log("slug", provider.providerSlug);
   const extra = await calculateMetadata(provider, controller);
+  console.log("exgra", JSON.stringify(extra).length);
+
   const metadata: Provider = {
     ...rest,
     ...extra,
@@ -154,19 +157,15 @@ export const storeOpenapi = async (
 
   const proxyUrl = `https://openapisearch.com/api/${metadata.providerSlug}/openapi.json`;
   const hasExternalStorage = metadata.openapiUrl !== proxyUrl;
-  const openapiNotTooBig = openapi
-    ? JSON.stringify(openapi).length < 1024 * 1024
+  const openapiTooBig = openapi
+    ? JSON.stringify(openapi).length >= 1024 * 1024
     : undefined;
 
-  if (openapi && !hasExternalStorage && !openapiNotTooBig) {
+  if (openapi && !hasExternalStorage && openapiTooBig) {
     console.error(`${metadata.providerSlug} too big openapi`);
+  } else {
+    await redis.set(`openapi-store.openapi.${metadata.providerSlug}`, openapi);
   }
-
-  // to save storage, only store it if we can't just reuse the origin location.
-  const openapiSetPromise =
-    openapi && !hasExternalStorage && openapiNotTooBig
-      ? redis.set(`openapi-store.openapi.${metadata.providerSlug}`, openapi)
-      : undefined;
 
   const index = Index.fromEnv();
 
@@ -181,18 +180,11 @@ export const storeOpenapi = async (
     .filter(notEmpty)
     .join(" - ");
 
-  const upsertResultPromise = await index.upsert({
+  await index.upsert({
     id: provider.providerSlug,
     data,
     metadata,
   });
-
-  await Promise.all([
-    upsertResultPromise,
-    // metadataSetPromise,
-    // securitySetPromise,
-    openapiSetPromise,
-  ]);
 
   return proxyUrl;
 };

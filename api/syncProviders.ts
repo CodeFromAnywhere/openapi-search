@@ -60,29 +60,31 @@ export const GET = async (request: Request) => {
     );
   }
 
-  const updatedProviders = sourceProviders.filter((x) => {
-    const already = alreadyProviders?.[x.providerSlug];
+  const updatedProviders = sourceProviders
+    .filter((x) => {
+      const already = alreadyProviders?.[x.providerSlug];
 
-    if (!already || !already.updated) {
-      return true;
-    }
+      if (!already || !already.updated) {
+        return true;
+      }
 
-    const isAltered = already.sourceHash !== x.sourceHash;
-    if (isAltered) {
-      return true;
-    }
+      const isAltered = already.sourceHash !== x.sourceHash;
+      if (isAltered) {
+        return true;
+      }
 
-    if (x.updated && x.updated > already.updated) {
-      return true;
-    }
+      if (x.updated && x.updated > already.updated) {
+        return true;
+      }
 
-    const codeUpdated = codeLastUpdated > new Date(already.updated).valueOf();
-    if (codeUpdated) {
-      return true;
-    }
+      const codeUpdated = codeLastUpdated > new Date(already.updated).valueOf();
+      if (codeUpdated) {
+        return true;
+      }
 
-    return false;
-  });
+      return false;
+    })
+    .slice(0, 10);
 
   console.log(
     "source providers",
@@ -91,6 +93,11 @@ export const GET = async (request: Request) => {
     deletedProviders.length,
     "updated providers",
     updatedProviders.length,
+  );
+
+  console.log(
+    `updated ones for now`,
+    updatedProviders.map((x) => x.providerSlug),
   );
 
   if (!updatedProviders) {
