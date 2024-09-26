@@ -22,9 +22,6 @@ export const GET = async (request: Request, context: { waitUntil: any }) => {
   const exact = new URL(request.url).searchParams.get("exact") === "1";
 
   const categories = new URL(request.url).searchParams.get("categories");
-  if (!q) {
-    return new Response("No query", { status: 422 });
-  }
 
   const vectorRestToken = process.env.UPSTASH_VECTOR_REST_TOKEN;
   const vectorRestUrl = process.env.UPSTASH_VECTOR_REST_URL;
@@ -48,7 +45,7 @@ export const GET = async (request: Request, context: { waitUntil: any }) => {
 
   const results = await index.query({
     topK: 100,
-    data: q,
+    data: q || "",
     includeData: true,
     includeMetadata: true,
     filter: filters.join(" AND "),
@@ -63,8 +60,9 @@ export const GET = async (request: Request, context: { waitUntil: any }) => {
       status: 400,
     });
   }
-
-  context.waitUntil(upCount("search_queries", q));
+  if (q) {
+    context.waitUntil(upCount("search_queries", q));
+  }
 
   return new Response(JSON.stringify({ duration, results }), {
     status: 200,

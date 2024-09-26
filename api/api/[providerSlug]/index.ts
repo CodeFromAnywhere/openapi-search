@@ -1,3 +1,4 @@
+import { Index } from "@upstash/vector";
 import { redis } from "../../../src/redis.js";
 import { Provider } from "../../../src/types.js";
 import { upCount } from "../../../src/upCount.js";
@@ -11,9 +12,9 @@ export const GET = async (request: Request, context: any) => {
     (res) => res.text(),
   );
 
-  const metadata = await redis.get<Provider>(
-    `openapi-store.metadata.${providerSlug}`,
-  );
+  const metadata = (
+    await Index.fromEnv().fetch([providerSlug], { includeMetadata: true })
+  )?.[0]?.metadata;
 
   // TODO: Add 10 out of 50 related providers here or so using LLM.
 

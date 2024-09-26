@@ -25,11 +25,6 @@ export const GET = async () => {
     cursor = result.nextCursor as string;
   }
 
-  // const keys = await redis.scan("openapi-store.metadata.");
-  // if (!keys) {
-  //   return new Response("scan went wrong");
-  // }
-
   const list: string[] = ids.map(
     (id) => `https://openapisearch.com/api/${id}/openapi.json`,
   );

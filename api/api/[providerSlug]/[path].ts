@@ -4,6 +4,7 @@ import { OpenapiDocument } from "openapi-util";
 import * as yaml from "yaml";
 import { Provider } from "../../../src/types.js";
 import { convertSwaggerToOpenapi } from "../../../src/convertSwaggerToOpenapi.js";
+import { Index } from "@upstash/vector";
 
 /**
 
@@ -29,13 +30,12 @@ export const GET = async (request: Request) => {
   const extension = chunks.pop();
   const filename = chunks.join(".");
 
-  const metadataPromise = redis.get<Provider>(
-    `openapi-store.metadata.${providerSlug}`,
-  );
+  const metadata = (
+    await Index.fromEnv().fetch([providerSlug], { includeMetadata: true })
+  )?.[0]?.metadata as Provider | undefined;
 
   if (filename === "metadata") {
     // Respond with metadata
-    const metadata = await metadataPromise;
 
     if (!metadata || !metadata.openapiUrl) {
       return new Response("Not found", { status: 404 });
@@ -76,14 +76,9 @@ export const GET = async (request: Request) => {
     });
   }
 
-  const openapiPromise = redis.get<OpenapiDocument>(
+  const openapi = await redis.get<OpenapiDocument>(
     `openapi-store.openapi.${providerSlug}`,
   );
-
-  const [metadata, openapi] = await Promise.all([
-    metadataPromise,
-    openapiPromise,
-  ]);
 
   if (!metadata || !metadata.openapiUrl) {
     return new Response("Not found", { status: 404 });
@@ -112,13 +107,13 @@ export const GET = async (request: Request) => {
     ?.split(",")
     .map((x) => x.trim());
 
-  console.log({ isSwagger, convertedOpenapi, operationIds });
+  // console.log({ isSwagger, convertedOpenapi, operationIds });
 
   const finalOpenapi = operationIds?.length
     ? await pruneOpenapi(convertedOpenapi, operationIds, false)
     : convertedOpenapi;
 
-  console.log({ finalOpenapi });
+  // console.log({ finalOpenapi });
 
   if (!finalOpenapi) {
     return new Response("Could not get final openapi", { status: 500 });
