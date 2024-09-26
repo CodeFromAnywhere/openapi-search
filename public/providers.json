@@ -14,11 +14,6 @@
       "info": { "description": "AI-Powered Cloud Hosting" }
     },
 
-    "fake-openapi": {
-      "openapiUrl": "https://thisopenapidoesnotexist.com/openapi.json",
-      "info": { "description": "AI-Powered Cloud Hosting" }
-    },
-
     "upstash-redis": {
       "info": { "description": "Control a Redis database over API" },
       "openapiUrl": "https://openapi.actionschema.com/upstash-redis.json"
