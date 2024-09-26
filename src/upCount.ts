@@ -14,5 +14,5 @@ export const upCount = async (key: string, q: string) => {
   // });
   const end2 = Date.now();
   const duration2 = end2 - start2;
-  console.log("finished upping", duration2);
+  // console.log("finished upcount -  ms:", duration2);
 };
