@@ -174,11 +174,37 @@ export const storeOpenapi = async (
 
   const metadataTooLarge = JSON.stringify(metadata).length > 48000;
 
-  if (metadataTooLarge) {
-    console.error("Vector metadata doesn't fit for", provider.providerSlug);
-    console.log(metadata);
-    return;
-  }
+  const {
+    added,
+    updated,
+    inserted,
+    openapiUrl,
+    openapiVer,
+    providerSlug,
+    source,
+    categories,
+    links,
+    originalOpenapiUrl,
+    sourceHash,
+  } = metadata;
+
+  const realMetadata = metadataTooLarge
+    ? {
+        added,
+        updated,
+        inserted,
+        openapiUrl,
+        openapiVer,
+        providerSlug,
+        source,
+        categories,
+        links,
+        originalOpenapiUrl,
+        sourceHash,
+        isOpenapiInvalid: true,
+        openapiInvalidError: `Metadata too large: ${JSON.stringify(metadata).length} characters > 48000`,
+      }
+    : metadata;
 
   // set metadata
   if (stringSummary) {
@@ -228,7 +254,7 @@ export const storeOpenapi = async (
   await index.upsert({
     id: provider.providerSlug,
     data,
-    metadata,
+    metadata: realMetadata,
   });
 
   return proxyUrl;
