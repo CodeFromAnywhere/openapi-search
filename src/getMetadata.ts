@@ -3,10 +3,10 @@ import { Provider } from "./types.js";
 import { notEmpty } from "edge-util";
 export const getMetadata = async (context: {
   top?: "new" | "updated";
-  category?: string;
+  source?: string;
   categories?: string[];
 }) => {
-  const { category, top, categories } = context;
+  const { source, top, categories } = context;
   // `/metadata?filter=new|updated|popular&category&categories` each giving a top 100
 
   const index = Index.fromEnv();
@@ -22,7 +22,7 @@ export const getMetadata = async (context: {
 
     const result = await index.range({
       cursor,
-      limit: 100,
+      limit: 1000,
       includeMetadata: true,
     });
 
@@ -30,7 +30,8 @@ export const getMetadata = async (context: {
       .map((x) => x.metadata as Provider | undefined)
       .filter(notEmpty)
       .filter((item) => {
-        if (category && item.category !== category) {
+        if (source && item.source !== source) {
+          // must be in specified category
           return false;
         }
         if (
@@ -38,6 +39,7 @@ export const getMetadata = async (context: {
           categories.length &&
           !(item.categories || []).find((cat) => categories.includes(cat))
         ) {
+          // must have specified category
           return false;
         }
         return true;

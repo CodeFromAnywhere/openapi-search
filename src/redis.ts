@@ -161,4 +161,37 @@ export const redis = {
 
     return;
   },
+
+  // New function to remove multiple keys
+  mdel: async (keys: string[]) => {
+    const upstashUrl = `${process.env.UPSTASH_REDIS_REST_URL}/pipeline`;
+    const upstashToken = process.env.UPSTASH_REDIS_REST_TOKEN;
+
+    const pipeline = keys.map((key) => ["del", key] as ["del", string]);
+
+    const response = await fetch(upstashUrl, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${upstashToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(pipeline),
+    });
+
+    if (!response.ok) {
+      console.error("mdel failed", response.status, response.statusText);
+      return false;
+    }
+
+    const result = await response.json();
+
+    if (result.error) {
+      console.error("mdel error", result.error);
+      return false;
+    }
+
+    // Check if all keys were successfully deleted
+    const allDeleted = result.result.every((res: any) => res === 1);
+    return allDeleted;
+  },
 };

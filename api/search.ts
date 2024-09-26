@@ -18,7 +18,7 @@ export const OPTIONS = async (request: Request) => {
 };
 export const GET = async (request: Request, context: { waitUntil: any }) => {
   const q = new URL(request.url).searchParams.get("q");
-  const category = new URL(request.url).searchParams.get("category");
+  const source = new URL(request.url).searchParams.get("source");
   const exact = new URL(request.url).searchParams.get("exact") === "1";
 
   const categories = new URL(request.url).searchParams.get("categories");
@@ -39,19 +39,20 @@ export const GET = async (request: Request, context: { waitUntil: any }) => {
   const start = Date.now();
 
   const filters = [
+    // never show invalid openapis
+    `isOpenapiInvalid = false`,
     categories ? `categories CONTAINS '${categories}'` : undefined,
-    category ? `category = '${category}'` : undefined,
+    source ? `source = '${source}'` : undefined,
     exact ? `providerSlug GLOB '*${q}*'` : undefined,
   ].filter(notEmpty);
 
   const results = await index.query({
-    topK: 25,
+    topK: 100,
     data: q,
     includeData: true,
     includeMetadata: true,
     filter: filters.join(" AND "),
     includeVectors: false,
-    vector: undefined,
   });
 
   const end = Date.now();

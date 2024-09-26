@@ -15,17 +15,24 @@ export type Provider = {
     ["x-logo"]?: { backgroundColor?: string; url: string };
   };
   providerSlug: string;
+  /**If true, url couldn't be found or parsed */
+  isOpenapiInvalid?: boolean;
   openapi?: OpenapiDocument;
+  /** iso time string */
   added?: string;
+  /** iso timestring */
   updated?: string;
   originalOpenapiUrl?: string;
   openapiUrl: string;
   categories?: string[];
   links?: XLinks;
   openapiVer: string;
-  category: "register" | "primary" | "apisguru" | "secondary" | "internal";
+  source: "register" | "primary" | "apisguru" | "secondary" | "internal";
   /** If required, the security scheme(s) with access token(s) can be provided here, to allow the OpenAPI to be tested */
   securitySchemes?: { key: string; access_token: string }[];
+
+  /** calculated hash over the source (useful for seeing if it has changed) */
+  sourceHash?: string;
 };
 
 export interface ApisGuruList {

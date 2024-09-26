@@ -1,7 +1,12 @@
-import { notEmpty, onlyUnique2 } from "edge-util";
+import { hashCode, notEmpty, onlyUnique2 } from "edge-util";
 import { Provider, ApisGuruList } from "./types.js";
 
-/** should take under 10 sec */
+/** should take under 10 sec to get providers from these sources:
+ *
+ * - hardcoded providers.json
+ * - apis guru
+ * -
+ */
 export const getAllProviders = async () => {
   const providersPromise = fetch(
     "https://openapisearch.com/providers.json",
@@ -46,13 +51,14 @@ export const getAllProviders = async () => {
           const p: Provider = {
             links: info?.["x-links"],
             openapiVer: openapiVer,
-            category: "primary",
+            source: "primary",
             openapiUrl,
             providerSlug,
             info,
             categories,
           };
-          return p;
+          const sourceHash = String(hashCode(JSON.stringify(p)));
+          return { ...p, sourceHash } as Provider;
         })
         .filter(notEmpty)
     : [];
@@ -72,12 +78,13 @@ export const getAllProviders = async () => {
         added,
         updated,
         openapiVer,
-        category: "apisguru",
+        source: "apisguru",
         // NB: get the original URL
         openapiUrl: info?.["x-origin"]?.[0]?.url || link,
         providerSlug,
         info,
         categories: info?.["x-apisguru-categories"],
+        // no sourceHash needed because we have the updated param we can trust
       };
 
       return p;
@@ -90,6 +97,7 @@ export const getAllProviders = async () => {
       (a, b) => a.openapiUrl === b.openapiUrl,
     ),
   );
+
   console.log(
     `primary:${primaryProviders.length}, guru: ${apisGuruProviders.length} = unique: ${unique.length}`,
   );

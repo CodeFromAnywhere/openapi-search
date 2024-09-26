@@ -12,7 +12,7 @@
 
   "crons": [
     {
-      "path": "/api/storeProviders",
+      "path": "/api/syncProviders",
       "schedule": "0 0 * * *"
     }
   ],

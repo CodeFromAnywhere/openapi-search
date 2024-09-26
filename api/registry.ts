@@ -14,7 +14,7 @@ export const GET = async () => {
 
     const result = await index.range({
       cursor,
-      limit: 100,
+      limit: 1000,
     });
 
     ids = ids.concat(result.vectors.map((x) => x.id));

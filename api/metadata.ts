@@ -4,8 +4,7 @@ import { getPopular } from "../src/getPopular.js";
 export const GET = async (request: Request) => {
   const top = new URL(request.url).searchParams.get("top") || undefined;
   const categories = new URL(request.url).searchParams.getAll("categories");
-  const category =
-    new URL(request.url).searchParams.get("category") || undefined;
+  const source = new URL(request.url).searchParams.get("source") || undefined;
   const popular = new URL(request.url).searchParams.get("popular") === "1";
 
   if (popular) {
@@ -19,7 +18,7 @@ export const GET = async (request: Request) => {
 
   const obj = await getMetadata({
     categories,
-    category,
+    source,
     top: top as "new" | "updated" | undefined,
   });
 

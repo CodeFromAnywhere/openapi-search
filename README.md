@@ -21,8 +21,7 @@ Targeted improvements compared to https://apis.guru:
 Wishlist:
 
 - E2E Testing of OpenAPIs
-- ~~OpenAPI Firehose~~
-- AI Crawler for OpenAPI Discovery
+- AI Crawler for API Discovery
 - AI Crawler to augment OpenAPI Metadata
   - Adds authentication + scope info
   - Adds useful links
@@ -37,7 +36,7 @@ Wishlist:
 
 # TODO
 
-Currently indexation has many errors and bad validation. **Improved api indexation and validation** is top priority
+Currently indexation has many errors and bad validation. **Improved API indexation and validation** is top priority
 
 - There's still a bug in providerslug being slugified containing things like ':'. this shouldn't be removed!
 - Add createdAt date to openapisearch storage
@@ -54,10 +53,8 @@ I'm happy after all search results:
 
 Then...
 
-🤔 put chat away, is not needed to be a value proposition of this site...
-
-🤔 email apis.guru
+🤔 Email apis.guru
 
 🤔 Shall I put actionschema.com live?
 
-🤔 See [backlog](BACKLOG.md). much more to do
+🤔 See [backlog](BACKLOG.md). Much more to do.

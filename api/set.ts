@@ -81,16 +81,17 @@ export const POST = async (request: Request) => {
     json.openapiUrl ||
     `https://openapisearch.com/api/${chosenSlug}/openapi.json`;
 
-  const proxyUrl = await storeOpenapi({
-    openapiVer: openapiJson.openapi,
-    openapiUrl,
-    providerSlug: chosenSlug,
-    openapi: json.openapi,
-    categories: json.categories,
-    links: json.links,
-    category: "register",
-    securitySchemes: json.securitySchemes,
-  });
+  // const proxyUrl = await storeOpenapi({
+  //   openapiVer: openapiJson.openapi,
+  //   openapiUrl,
+  //   providerSlug: chosenSlug,
+  //   openapi: json.openapi,
+  //   categories: json.categories,
+  //   links: json.links,
+  //   source: "register",
+  //   securitySchemes: json.securitySchemes,
+  // });
+  const proxyUrl = undefined;
 
   return new Response(proxyUrl, { status: 201 });
 };

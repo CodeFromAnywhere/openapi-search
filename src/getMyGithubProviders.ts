@@ -55,7 +55,7 @@ export const getMyGithubProviders = async () => {
             // TODO: find a better way for this
             added: item.updated_at,
             updated: item.updated_at,
-            category: "internal",
+            source: "internal",
             openapiUrl,
             providerSlug: camelCase(item.name),
             categories: item.topics,

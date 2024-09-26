@@ -1,4 +1,4 @@
-import { tryParseJson, tryParseYamlToJson } from "edge-util";
+import { notEmpty, tryParseJson, tryParseYamlToJson } from "edge-util";
 import { OpenapiDocument, summarizeOpenapi } from "openapi-util";
 import { embeddingsClient } from "../src/embeddings.js";
 import { redis } from "../src/redis.js";
@@ -6,10 +6,13 @@ import { Provider } from "../src/types.js";
 import { convertSwaggerToOpenapi } from "../src/convertSwaggerToOpenapi.js";
 import { Index } from "@upstash/vector";
 
-//todo: make openapi-util edge-friendly to get unlimited scaling
+// TODO: make openapi-util edge-friendly to get unlimited scaling
 // https://vercel.com/docs/functions/runtimes#automatic-concurrency-scaling
-//export const config = {runtime:"edge"}
-export const calculateMetadata = async (provider: Provider) => {
+// export const config = {runtime:"edge"}
+export const calculateMetadata = async (
+  provider: Provider,
+  controller: ReadableStreamDefaultController<any>,
+) => {
   try {
     /**
   # Calculated data
@@ -114,69 +117,83 @@ export const calculateMetadata = async (provider: Provider) => {
   }
 };
 
-export const storeOpenapi = async (provider: Provider) => {
+export const storeOpenapi = async (
+  provider: Provider,
+  controller: ReadableStreamDefaultController<any>,
+) => {
   const { openapi, securitySchemes, ...rest } = provider;
 
-  const extra = await calculateMetadata(provider);
+  const extra = await calculateMetadata(provider, controller);
+  const metadata: Provider = { ...rest, ...extra };
 
-  const metadata = { ...rest, ...extra };
+  const metadataTooLarge = JSON.stringify(metadata).length > 48000;
 
-  // set metadata
-  const metadataSetPromise = redis.set(
-    `openapi-store.metadata.${metadata.providerSlug}`,
-    metadata,
-  );
+  if (metadataTooLarge) {
+    console.error("Vector metadata doesn't fit for", provider.providerSlug);
+    return;
+  }
+
+  // // set metadata
+  // const metadataSetPromise = redis.set(
+  //   `openapi-store.metadata.${metadata.providerSlug}`,
+  //   metadata,
+  // );
 
   //set security
-  const securitySetPromise = securitySchemes
-    ? redis.set(`openapi-store.security.${metadata.providerSlug}`, {
-        securitySchemes,
-      })
-    : undefined;
+  // const securitySetPromise = securitySchemes
+  //   ? redis.set(`openapi-store.security.${metadata.providerSlug}`, {
+  //       securitySchemes,
+  //     })
+  //   : undefined;
 
   const proxyUrl = `https://openapisearch.com/api/${metadata.providerSlug}/openapi.json`;
-  const isNew = metadata.openapiUrl === proxyUrl;
-  const openapiSize = openapi ? JSON.stringify(openapi).length : 0;
+  const hasExternalStorage = metadata.openapiUrl !== proxyUrl;
+  const openapiNotTooBig = openapi
+    ? JSON.stringify(openapi).length < 1024 * 1024
+    : undefined;
 
-  const openapiNotTooBig = openapiSize < 1024 * 1024;
-  if (openapi && isNew && !openapiNotTooBig) {
-    console.error(`${metadata.providerSlug} too big openapi: ${openapiSize}`);
+  if (openapi && !hasExternalStorage && !openapiNotTooBig) {
+    console.error(`${metadata.providerSlug} too big openapi`);
   }
+
   // to save storage, only store it if we can't just reuse the origin location.
   const openapiSetPromise =
-    openapi && isNew && openapiNotTooBig
+    openapi && !hasExternalStorage && openapiNotTooBig
       ? redis.set(`openapi-store.openapi.${metadata.providerSlug}`, openapi)
       : undefined;
 
   const index = Index.fromEnv();
 
   // Only put it there if it fits in metadata.
-  const vectorMetadata =
-    !metadata || JSON.stringify(metadata).length > 48000 ? undefined : metadata;
 
-  if (!vectorMetadata) {
-    console.error("Vector metadata doesn't fit for", provider.providerSlug);
-  }
+  const data = [
+    provider.providerSlug,
+    provider.info?.title,
+    provider.info?.description?.slice(0, 120),
+    provider.categories?.join(","),
+  ]
+    .filter(notEmpty)
+    .join(" - ");
 
   const upsertResultPromise = await index.upsert({
-    data: `${provider.providerSlug} - ${provider.info?.title || ""} - ${provider.info?.description || ""} - ${provider.categories?.join(",") || ""}`,
     id: provider.providerSlug,
-    metadata: vectorMetadata,
+    data,
+    metadata,
   });
 
-  const results = await Promise.all([
+  await Promise.all([
     upsertResultPromise,
-    metadataSetPromise,
-    securitySetPromise,
+    // metadataSetPromise,
+    // securitySetPromise,
     openapiSetPromise,
   ]);
-
-  console.log(results);
 
   return proxyUrl;
 };
 
+/** Called by upstash, so it can be a long function! */
 export const POST = async (request: Request) => {
+  // 1) Must be authenticated to store the openapi
   const auth = request.headers.get("Authorization")?.slice("Bearer ".length);
   if (
     new URL(request.url).hostname !== "localhost" &&
@@ -186,10 +203,22 @@ export const POST = async (request: Request) => {
   }
 
   const provider = await request.json();
-  const openapiUrl = await storeOpenapi(provider);
 
-  return new Response(openapiUrl, {
-    status: 200,
-    headers: { "Content-Type": "application/json" },
-  });
+  return new Response(
+    new ReadableStream({
+      async start(controller) {
+        let buffer = "";
+
+        const openapiUrl = await storeOpenapi(provider, controller);
+
+        controller.close();
+      },
+    }),
+    {
+      headers: {
+        "Content-Type": "text/plain; charset=utf-8",
+        "Transfer-Encoding": "chunked",
+      },
+    },
+  );
 };
