@@ -2,6 +2,10 @@
   "$schema": "https://openapisearch.com/providers.schema.json",
 
   "providers": {
+    "brandwatch": {
+      "info": { "description": "Watch social media about your brand" },
+      "openapiUrl": "https://openapi.actionschema.com/brandwatch.json"
+    },
     "jina-reader": {
       "info": {
         "description": "Read webpages in markdown, html, or screenshot"

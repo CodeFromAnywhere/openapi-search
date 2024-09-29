@@ -40,11 +40,6 @@ This is the intended daily synchronisation process which ensures search results 
 
 # TODO
 
-# Stabilize + Cache chat.actionschema.com
-
-- Fix problem with weird anthropic generations
-- Cach inputs if no tools are left or if allowed to cache
-
 # Calculated data
 
 - Bring back openapiSummary without dependency
